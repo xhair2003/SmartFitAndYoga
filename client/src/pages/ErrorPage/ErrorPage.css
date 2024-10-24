@@ -1,4 +1,4 @@
-body {
+.error-body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
     margin: 0;
@@ -28,6 +28,7 @@ body {
     position: relative;
     z-index: 10;
 }
+
 .background-layer {
     font-size: 200px;
     color: #e0e0e0;
@@ -37,4 +38,28 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 0;
+}
+
+.error-container a {
+    color: #0534d0; /* White color for the link */
+    text-decoration: underline; /* Underline the link */
+    font-size: 16px; /* Font size */
+    margin-top: 20px; /* Space above the link */
+    display: inline-block; /* Make it an inline block for margin */
+}
+
+.error-container a:hover {
+    color: #ffcc00; /* Change color on hover */
+    cursor: pointer; /* Change cursor to pointer */
+}
+/* src/pages/ErrorPage/ErrorPage.css */
+.home-link {
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+    color: #030303;
+}
+
+.home-link:hover {
+    color: #ff0000; /* Change this to your desired hover color */
 }
