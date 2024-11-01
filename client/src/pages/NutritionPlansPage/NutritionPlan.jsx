@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react';
 import * as S from './NutritionPlanStyles';
 import './NutritionPlan.css';
+// import { div } from 'framer-motion/client';
+import Footer from '../../Components/Footer/Footer';
+import Navbar from '../../Components/Navbar/Navbar';
 
 const NutritionPlan = () => {
   const [activeDay, setActiveDay] = useState(0);
@@ -58,6 +61,8 @@ const NutritionPlan = () => {
   const dayListRef = useRef(null);
 
   return (
+    <div>
+    <Navbar />
     <S.PageContainer>
       <S.Title>Nutrition Plan</S.Title>
       <S.ContentContainer>
@@ -102,7 +107,7 @@ const NutritionPlan = () => {
             <S.Button>Weekly ingredients list</S.Button>
             <S.Button>Create another meal plan</S.Button>
           </S.DaysOfWeek>
-          </S.Sidebar>
+        </S.Sidebar>
         <S.MealsContainer>
           {meals.map((meal, index) => (
             <S.MealCard key={index}>
@@ -127,8 +132,10 @@ const NutritionPlan = () => {
             </S.MealCard>
           ))}
         </S.MealsContainer>
-      </S.ContentContainer>
-    </S.PageContainer>
+        </S.ContentContainer>
+      </S.PageContainer>
+      <Footer />
+    </div>
   );
 };
 
