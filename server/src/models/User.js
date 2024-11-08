@@ -9,10 +9,6 @@ const User = sequelize.define(
             autoIncrement: true,
             primaryKey: true,
         },
-        name: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
         email: {
             type: DataTypes.STRING(255),
             unique: true,
@@ -26,7 +22,9 @@ const User = sequelize.define(
     {
         timestamps: true,
         tableName: 'Users',
-        underscored: true, // Sử dụng snake_case cho tên cột
+        underscored: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
     }
 );
 

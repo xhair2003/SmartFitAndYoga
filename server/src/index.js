@@ -1,9 +1,12 @@
-const { sequelize } = require('./models/User');
+const { sequelize } = require('./models');
 const express = require('express');
+const cors = require('cors');
+const { corsOptions } = require('./utils/corsOptions');
 const {AuthRoutes} = require('./routes')
 
 const app = express();
 
+app.use(cors(corsOptions));
 app.use(express.json());
 //app.use(morgan('dev'));
 app.use('/api/auth', AuthRoutes);
@@ -31,7 +34,7 @@ sequelize
 
       app.listen(PORT, () => {
           console.log(
-              `Server is running on port ${PORT}`
+              `SmartFit server is running on port ${PORT}`
           );
       });
   })
