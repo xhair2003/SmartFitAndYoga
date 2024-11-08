@@ -3,8 +3,10 @@ import * as Components from './LoginPageStyles';
 import { FaGooglePlusG, FaFacebookF } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [signIn, toggle] = useState(true);
     const [formData, setFormData] = useState({
         email: '',
@@ -48,6 +50,7 @@ const LoginPage = () => {
     };
 
     const handleSignin = async () => {
+        navigate('/home');
         try {
             const response = await fetch("http://localhost:5000/api/auth/signin", {
                 method: "POST",
@@ -140,7 +143,7 @@ const LoginPage = () => {
                         <Components.LeftOverlayPanel signinIn={signIn}>
                             <Components.Title>Welcome Back!</Components.Title>
                             <Components.Paragraph>Enter your personal details to use all site features</Components.Paragraph>
-                            <Components.GhostButton onClick={() => toggle(true)}>Sign In</Components.GhostButton>
+                            <Components.GhostButton onClick={(handleSignin) => toggle(true)}>Sign In</Components.GhostButton>
                         </Components.LeftOverlayPanel>
 
                         <Components.RightOverlayPanel signinIn={signIn}>
