@@ -26,12 +26,12 @@ export const routes = [
     },
     {   
         id: 4,
-        path: '/verify-otp',
+        path: '/forgot-password/verify-otp',
         page: VerifyOtpPage,
     },
     {   
         id: 5,
-        path: '/update-password',
+        path: '/forgot-password/verify-otp/update-password',
         page: UpdatePasswordPage,
     },
     {   

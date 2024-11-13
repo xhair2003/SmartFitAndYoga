@@ -41,7 +41,7 @@ const UpdatePasswordPage = () => {
                     required
                 />
             </Components.ItemContainer>
-            <Components.Button onClick={submitHandler} href="/login">Update Password</Components.Button>
+            <Components.Button onClick={submitHandler}>Update Password</Components.Button>
             <Components.Link href="/login">Back to login</Components.Link>
         </Components.Container>
     );

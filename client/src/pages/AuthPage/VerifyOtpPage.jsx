@@ -44,8 +44,9 @@ const VerifyOtpPage = () => {
 
   const submitOtp = (event) => {
     event.preventDefault();
-    console.log(otp1, otp2, otp3, otp4, otp5, otp6);
-    navigate('/update-password');
+    const finalOtp = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
+    console.log(finalOtp);
+    navigate('/forgot-password/verify-otp/update-password');
 
   };
 
@@ -79,7 +80,7 @@ const VerifyOtpPage = () => {
           />
         ))}
       </Components.OtpContainer>
-      <Components.Button onClick={submitOtp} href="/update-password">Verify</Components.Button>
+      <Components.Button onClick={submitOtp}>Verify</Components.Button>
       <Components.Timer>
         <Timer/>
       </Components.Timer>

@@ -9,7 +9,7 @@ const ForgotPasswordPage = () => {
   const submitHandler = (event) => {
     event.preventDefault();
     console.log('Sending OTP to:', email);
-    navigate('/verify-otp');
+    navigate('/forgot-password/verify-otp');
   };
 
   return (
@@ -26,7 +26,7 @@ const ForgotPasswordPage = () => {
             required
           />
         </Components.ItemContainer>
-        <Components.Button onClick={submitHandler} href="/verify-otp">Send OTP</Components.Button>
+        <Components.Button onClick={submitHandler}>Send OTP</Components.Button>
       <Components.Link href="/login">Back to login</Components.Link>
     </Components.Container>
   );
