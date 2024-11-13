@@ -4,6 +4,7 @@ import { FaGooglePlusG, FaFacebookF } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -50,7 +51,6 @@ const LoginPage = () => {
     };
 
     const handleSignin = async () => {
-        navigate('/home');
         try {
             const response = await fetch("http://localhost:5000/api/auth/signin", {
                 method: "POST",
@@ -65,13 +65,14 @@ const LoginPage = () => {
             const data = await response.json();
             console.log("Response data:", data);
             if (response.ok) {
-                alert("Sign in successful!");
+                toast.success("Sign in successful!");
+                navigate('/home');
             } else {
-                alert(data.error || "Sign in failed.");
+                alert(data.error || "Đăng nhập thất bại.");
             }
         } catch (error) {
             console.error("Signin error:", error);
-            alert("An error occurred during signin.");
+            alert("Đã xảy ra lỗi trong quá trình đăng nhập.");
         }
     };
 
@@ -88,23 +89,23 @@ const LoginPage = () => {
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
                         <Components.Retitle href='#'>or use your Phone number/Email for registration</Components.Retitle>
-                        <Components.Input 
-                            type='email' 
-                            placeholder='Phone number or Email' 
+                        <Components.Input
+                            type='email'
+                            placeholder='Phone number or Email'
                             name='email'
-                            onChange={handleInputChange} 
+                            onChange={handleInputChange}
                         />
-                        <Components.Input 
-                            type='password' 
-                            placeholder='Password' 
+                        <Components.Input
+                            type='password'
+                            placeholder='Password'
                             name='password'
-                            onChange={handleInputChange} 
+                            onChange={handleInputChange}
                         />
-                        <Components.Input 
-                            type='password' 
-                            placeholder='Re-Password' 
+                        <Components.Input
+                            type='password'
+                            placeholder='Re-Password'
                             name='repassword'
-                            onChange={handleInputChange} 
+                            onChange={handleInputChange}
                         />
                         <Components.Button onClick={handleSignup}>Sign Up</Components.Button>
                     </Components.Form>
@@ -120,19 +121,19 @@ const LoginPage = () => {
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
                         <Components.Retitle href='#'>or use your Phone number/Email and password</Components.Retitle>
-                        <Components.Input 
-                            type='email' 
-                            placeholder='Email' 
+                        <Components.Input
+                            type='email'
+                            placeholder='Email'
                             name='email'
-                            onChange={handleInputChange} 
+                            onChange={handleInputChange}
                         />
-                        <Components.Input 
-                            type='password' 
-                            placeholder='Password' 
+                        <Components.Input
+                            type='password'
+                            placeholder='Password'
                             name='password'
-                            onChange={handleInputChange} 
+                            onChange={handleInputChange}
                         />
-                        <Components.Anchor href='#'>Forgot your password?</Components.Anchor>
+                        <Components.Anchor href='#' onClick={() => navigate('/forgot-password')}>Forgot your password?</Components.Anchor>
                         <Components.Button onClick={handleSignin}>Sign In</Components.Button>
                     </Components.Form>
                 </Components.SignInContainer>
@@ -143,7 +144,7 @@ const LoginPage = () => {
                         <Components.LeftOverlayPanel signinIn={signIn}>
                             <Components.Title>Welcome Back!</Components.Title>
                             <Components.Paragraph>Enter your personal details to use all site features</Components.Paragraph>
-                            <Components.GhostButton onClick={(handleSignin) => toggle(true)}>Sign In</Components.GhostButton>
+                            <Components.GhostButton onClick={() => toggle(true)}>Sign In</Components.GhostButton>
                         </Components.LeftOverlayPanel>
 
                         <Components.RightOverlayPanel signinIn={signIn}>
