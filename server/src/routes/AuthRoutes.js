@@ -3,6 +3,7 @@ const express = require('express');
 const { AuthController } = require('../controllers');
 //const { AuthValidation } = require('../validation'); // Nhập khẩu xác thực
 //const { validate } = require('../middlewares/validate'); // Nhập khẩu middleware xác thực
+//const { limiterAuth } = require('../utils/rateLimiter');
 const router = express.Router();
 
 router.post(
