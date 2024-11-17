@@ -4,7 +4,8 @@ import { FaGooglePlusG, FaFacebookF } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast } from "react-hot-toast";
+import axios from 'axios';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -12,67 +13,80 @@ const LoginPage = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        repassword: ''
+        repassword: '', // Đã thêm trường repassword
     });
+    //const [setErrors] = useState({});
 
     const handleInputChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        const { name, value } = e.target;
+        setFormData((state) => ({ ...state, [name]: value }));
     };
 
     const handleSignup = async () => {
-        if (formData.password !== formData.repassword) {
-            alert("Passwords do not match!");
+        // Kiểm tra xem email và mật khẩu có được nhập hay không
+        if (!formData.email || !formData.password) {
+            toast.error("Email và mật khẩu là bắt buộc!");
             return;
         }
+    
         try {
-            const response = await fetch("http://localhost:5000/api/auth/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password
-                })
+            // Gửi yêu cầu đăng ký đến máy chủ
+            await axios.post("http://localhost:5000/api/auth/signup", {
+                email: formData.email,
+                password: formData.password,
             });
-            const data = await response.json();
-            if (response.ok) {
-                alert("Sign up successful!");
-            } else {
-                alert(data.error || "Sign up failed.");
-            }
+    
+            // Thông báo thành công
+            toast.success("Signup success! Please signin.");
+            
+            // Chuyển hướng đến trang đăng nhập hoặc trang chính
+            // navigate('/login');
         } catch (error) {
-            console.error("Signup error:", error);
-            alert("An error occurred during signup.");
+            console.error("Lỗi đăng ký:", error);
+            // Lấy thông báo lỗi từ phản hồi hoặc hiển thị thông báo chung
+            const errorMessage = error.response?.data?.error || error.message || "An error occurred. Please try again.";
+            toast.error(errorMessage);
         }
     };
 
     const handleSignin = async () => {
+        if (!formData.email || !formData.password) {
+            toast.error("Email and password are required!");
+            return;
+        }
+    
         try {
-            const response = await fetch("http://localhost:5000/api/auth/signin", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password
-                })
+            const { data } = await axios.post("http://localhost:5000/api/auth/signin", {
+                email: formData.email,
+                password: formData.password,
             });
-            const data = await response.json();
-            console.log("Response data:", data);
-            if (response.ok) {
-                toast.success("Sign in successful!");
-                navigate('/home');
-            } else {
-                alert(data.error || "Đăng nhập thất bại.");
-            }
+    
+            toast.success("Signin success");
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("refreshToken", data.refreshToken);
+    
+            navigate('/home');
         } catch (error) {
             console.error("Signin error:", error);
-            alert("Đã xảy ra lỗi trong quá trình đăng nhập.");
+            const errorMessage = error.response?.data?.error || error.message || "An error occurred. Please try again.";
+            toast.error(errorMessage);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post("http://localhost:5000/api/auth/signin", {
+                email: formData.email,
+                password: formData.password,
+                level: 0,
+            });
+    
+            navigate('/home');
+        } catch (error) {
+            console.error("Lỗi đăng nhập:", error);
+            const errorMessage = error.response?.data?.error || error.message || "An error occurred. Please try again.";
+            toast.error(errorMessage);
         }
     };
 
@@ -80,8 +94,8 @@ const LoginPage = () => {
         <Components.Background>
             <Components.Container>
                 {/* Sign Up Container */}
-                <Components.SignUpContainer signinIn={signIn}>
-                    <Components.Form>
+                <Components.SignUpContainer >
+                    <Components.Form onSubmit={handleSignup}>
                         <Components.Title>Create Account</Components.Title>
                         <Components.SocialButtons>
                             <Components.SocialButton><FaGooglePlusG /></Components.SocialButton>
@@ -107,13 +121,13 @@ const LoginPage = () => {
                             name='repassword'
                             onChange={handleInputChange}
                         />
-                        <Components.Button onClick={handleSignup}>Sign Up</Components.Button>
+                        <Components.Button type="submit">Sign Up</Components.Button>
                     </Components.Form>
                 </Components.SignUpContainer>
 
                 {/* Sign In Container */}
                 <Components.SignInContainer signinIn={signIn}>
-                    <Components.Form>
+                    <Components.Form onSubmit={handleSubmit}>
                         <Components.Title>Sign In</Components.Title>
                         <Components.SocialButtons>
                             <Components.SocialButton><FaGooglePlusG /></Components.SocialButton>
