@@ -1,0 +1,87 @@
+.meal-plan-container {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    border-radius: 8px;
+  }
+  
+  .meal-plan-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .progress-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .progress-bar .step {
+    background-color: #fdd835;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 0 5px;
+  }
+  
+  .progress-bar .line {
+    background-color: #fff;
+    height: 2px;
+    width: 40px;
+  }
+  
+  .meal-plan-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  textarea {
+    resize: none;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .generate-button {
+    background-color: #fdd835;
+    color: #1e1e1e;
+    border: none;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .generate-button:hover {
+    background-color: #ffca28;
+  }
+  

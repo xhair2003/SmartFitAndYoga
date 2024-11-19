@@ -7,6 +7,8 @@ import NutritionPlan from "../pages/NutritionPlansPage/NutritionPlan.jsx";
 import ForgotPassword from "../pages/AuthPage/ForgotPasswordPage.jsx";
 import VerifyOtpPage from "../pages/AuthPage/VerifyOtpPage.jsx";
 import UpdatePasswordPage from "../pages/AuthPage/UpdatePasswordPage.jsx";
+import CreatePage from "../pages/CreatePage/CreatePage.jsx";
+import LoadingPage from "../pages/CreatePage/LoadingPage.jsx";
 
 export const routes = [
     {   
@@ -36,21 +38,31 @@ export const routes = [
     },
     {   
         id: 6,
+        path: '/create',
+        page: CreatePage,
+    },
+    {   
+        id: 7,
+        path: '/loading',
+        page: LoadingPage,
+    },
+    {   
+        id: 8,
         path: '/home',
         page: HomePage,
     },
     {   
-        id: 7,
+        id: 9,
         path: '/about',
         page: AboutPage,
     },
     {   
-        id: 8,
+        id: 10,
         path: '/plans',
         page: NutritionPlan,
     },
     {   
-        id: 9,
+        id: 11,
         path: '*',
         page: ErrorPage,
     },
