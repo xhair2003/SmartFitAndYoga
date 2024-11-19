@@ -65,6 +65,7 @@ export const Form = styled.form`
 `;
 
 export const Title = styled.h1`
+  color: #000000;
   font-weight: bold;
   margin: 0;
 `;
