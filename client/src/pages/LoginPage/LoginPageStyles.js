@@ -196,6 +196,7 @@ export const RightOverlayPanel = styled(OverlayPanel)`
 
 
 export const Paragraph = styled.p`
+  color: #000000;
   font-size: 14px;
   font-weight: 100;
   line-height: 20px;

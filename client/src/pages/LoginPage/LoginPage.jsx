@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import * as Components from './LoginPageStyles';
 import { FaGooglePlusG, FaFacebookF } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -13,80 +13,62 @@ const LoginPage = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        repassword: '', // Đã thêm trường repassword
+        repassword: '',
     });
-    //const [setErrors] = useState({});
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            console.log(parsedUser);
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((state) => ({ ...state, [name]: value }));
     };
 
-    const handleSignup = async () => {
-        // Kiểm tra xem email và mật khẩu có được nhập hay không
-        if (!formData.email || !formData.password) {
-            toast.error("Email và mật khẩu là bắt buộc!");
-            return;
-        }
-    
-        try {
-            // Gửi yêu cầu đăng ký đến máy chủ
-            await axios.post("http://localhost:5000/api/auth/signup", {
-                email: formData.email,
-                password: formData.password,
-            });
-    
-            // Thông báo thành công
-            toast.success("Signup success! Please signin.");
-            
-            // Chuyển hướng đến trang đăng nhập hoặc trang chính
-            // navigate('/login');
-        } catch (error) {
-            console.error("Lỗi đăng ký:", error);
-            // Lấy thông báo lỗi từ phản hồi hoặc hiển thị thông báo chung
-            const errorMessage = error.response?.data?.error || error.message || "An error occurred. Please try again.";
-            toast.error(errorMessage);
-        }
-    };
-
-    const handleSignin = async () => {
-        if (!formData.email || !formData.password) {
-            toast.error("Email and password are required!");
-            return;
-        }
-    
-        try {
-            const { data } = await axios.post("http://localhost:5000/api/auth/signin", {
-                email: formData.email,
-                password: formData.password,
-            });
-    
-            toast.success("Signin success");
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("refreshToken", data.refreshToken);
-    
-            navigate('/home');
-        } catch (error) {
-            console.error("Signin error:", error);
-            const errorMessage = error.response?.data?.error || error.message || "An error occurred. Please try again.";
-            toast.error(errorMessage);
-        }
-    };
-
-    const handleSubmit = async (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
+        const { email, password, repassword } = formData;
+
+        if (password !== repassword) {
+            toast.error("Passwords do not match!");
+            return;
+        }
+
         try {
-            await axios.post("http://localhost:5000/api/auth/signin", {
-                email: formData.email,
-                password: formData.password,
-                level: 0,
-            });
-    
+            await axios.post('http://localhost:5000/api/auth/register', { email, password });
+            toast.success("Account created successfully!");
+        } catch (error) {
+            toast.error("Failed to register. Please try again.");
+        }
+    };
+
+    const handleSignIn = async (e) => {
+        e.preventDefault();
+        const { email, password } = formData;
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            const { token, user } = response.data;
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            toast.success("Login successful!");
             navigate('/home');
         } catch (error) {
-            console.error("Lỗi đăng nhập:", error);
-            const errorMessage = error.response?.data?.error || error.message || "An error occurred. Please try again.";
-            toast.error(errorMessage);
+            toast.error("Login failed. Please check your credentials.");
+        }
+    };
+
+    const handleSubmit = (e) => {
+        if (signIn) {
+            handleSignIn(e);
+        } else {
+            handleSignUp(e);
         }
     };
 
@@ -94,8 +76,8 @@ const LoginPage = () => {
         <Components.Background>
             <Components.Container>
                 {/* Sign Up Container */}
-                <Components.SignUpContainer >
-                    <Components.Form onSubmit={handleSignup}>
+                <Components.SignUpContainer signinIn={signIn}>
+                    <Components.Form onSubmit={handleSubmit}>
                         <Components.Title>Create Account</Components.Title>
                         <Components.SocialButtons>
                             <Components.SocialButton><FaGooglePlusG /></Components.SocialButton>
@@ -147,8 +129,8 @@ const LoginPage = () => {
                             name='password'
                             onChange={handleInputChange}
                         />
-                        <Components.Anchor href='#' onClick={() => navigate('/forgot-password')}>Forgot your password?</Components.Anchor>
-                        <Components.Button onClick={handleSignin}>Sign In</Components.Button>
+                        <Components.Anchor href='#'>Forgot your password?</Components.Anchor>
+                        <Components.Button type="submit">Sign In</Components.Button>
                     </Components.Form>
                 </Components.SignInContainer>
 
