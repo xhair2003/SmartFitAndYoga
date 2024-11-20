@@ -3,7 +3,7 @@ import LoginPage from "../pages/LoginPage/LoginPage.jsx";
 import ErrorPage from "../pages/ErrorPage/ErrorPage.jsx";
 import HomePage from "../pages/HomePage/HomePage.jsx";
 import AboutPage from "../pages/AboutPage/AboutPage.jsx";
-import NutritionPlan from "../pages/NutritionPlansPage/NutritionPlan.jsx";
+import MealPlanPage from "../pages/MealPlansPage/MealPlan.jsx";
 import ForgotPassword from "../pages/AuthPage/ForgotPasswordPage.jsx";
 import VerifyOtpPage from "../pages/AuthPage/VerifyOtpPage.jsx";
 import UpdatePasswordPage from "../pages/AuthPage/UpdatePasswordPage.jsx";
@@ -59,7 +59,7 @@ export const routes = [
     {   
         id: 10,
         path: '/plans',
-        page: NutritionPlan,
+        page: MealPlanPage,
     },
     {   
         id: 11,

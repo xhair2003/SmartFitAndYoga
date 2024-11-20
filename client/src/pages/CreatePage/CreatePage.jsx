@@ -14,7 +14,7 @@ const CreatePage = () => {
     //diet: "Anything",
     includeSnacks: false,
     allergies: "",
-    email: "",
+    //email: "",
   });
 
   const navigate = useNavigate();
@@ -85,7 +85,7 @@ const CreatePage = () => {
             <option value="Lose Weight">Lose Weight</option>
             <option value="Maintain Weight">Maintain Weight</option>
           </select>
-          <select
+          {/* <select
             name="mealsPerDay"
             value={formData.mealsPerDay}
             onChange={handleChange}
@@ -93,9 +93,9 @@ const CreatePage = () => {
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
-          </select>
+          </select> */}
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <select name="diet" value={formData.diet} onChange={handleChange}>
             <option value="Anything">Anything</option>
             <option value="Vegetarian">Vegetarian</option>
@@ -111,7 +111,7 @@ const CreatePage = () => {
             />
             <label>Include Snacks?</label>
           </div>
-        </div>
+        </div> */}
         <div className="form-group">
           <textarea
             name="allergies"
@@ -120,7 +120,7 @@ const CreatePage = () => {
             onChange={handleChange}
           ></textarea>
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <input
             type="email"
             name="email"
@@ -128,7 +128,7 @@ const CreatePage = () => {
             value={formData.email}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
         <button type="submit" className="generate-button">
           Generate meal plan
         </button>

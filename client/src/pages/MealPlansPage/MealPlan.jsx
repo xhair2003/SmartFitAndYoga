@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import * as S from './NutritionPlanStyles';
-import './NutritionPlan.css';
+import * as S from './MealPlanStyles';
+import './MealPlan.css';
 // import { div } from 'framer-motion/client';
 import Footer from '../../Components/Footer/Footer';
 import Navbar from '../../Components/Navbar/Navbar';
 
-const NutritionPlan = () => {
+const MealPlanPage = () => {
   const [activeDay, setActiveDay] = useState(0);
   const [hoveredDay, setHoveredDay] = useState(null);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -139,4 +139,4 @@ const NutritionPlan = () => {
   );
 };
 
-export default NutritionPlan;
+export default MealPlanPage;
