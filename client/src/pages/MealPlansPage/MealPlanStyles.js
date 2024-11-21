@@ -216,3 +216,11 @@ export const NoteText = styled.p`
   font-size: 14px;
   color: #00ff00;
 `;
+
+export const Loading = styled.div`
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+`;
+
