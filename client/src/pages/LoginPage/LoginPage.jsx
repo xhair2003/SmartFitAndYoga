@@ -11,9 +11,9 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const [signIn, toggle] = useState(true);
     const [formData, setFormData] = useState({
+        name: '',
         email: '',
         password: '',
-        repassword: '',
     });
 
     useEffect(() => {
@@ -31,18 +31,16 @@ const LoginPage = () => {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-        const { email, password, repassword } = formData;
-
-        if (password !== repassword) {
-            toast.error("Passwords do not match!");
-            return;
-        }
-
+        const { name, email, password, } = formData;
+    
         try {
-            await axios.post('http://localhost:5000/api/auth/register', { email, password });
-            toast.success("Account created successfully!");
+            const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+            if (response.status === 201) {
+                toast.success("Account created successfully!");
+                toggle(true); // Chuyển sang giao diện Sign In sau khi đăng ký thành công
+            }
         } catch (error) {
-            toast.error("Failed to register. Please try again.");
+            toast.error(error.response?.data?.message || "Failed to register. Please try again.");
         }
     };
 
@@ -86,6 +84,12 @@ const LoginPage = () => {
                         </Components.SocialButtons>
                         <Components.Retitle href='#'>or use your Phone number/Email for registration</Components.Retitle>
                         <Components.Input
+                            type='text'
+                            placeholder='Name'
+                            name='name'
+                            onChange={handleInputChange}
+                        />
+                        <Components.Input
                             type='email'
                             placeholder='Phone number or Email'
                             name='email'
@@ -95,12 +99,6 @@ const LoginPage = () => {
                             type='password'
                             placeholder='Password'
                             name='password'
-                            onChange={handleInputChange}
-                        />
-                        <Components.Input
-                            type='password'
-                            placeholder='Re-Password'
-                            name='repassword'
                             onChange={handleInputChange}
                         />
                         <Components.Button type="submit">Sign Up</Components.Button>
