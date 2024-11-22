@@ -1,5 +1,40 @@
 const User = require('../models/User');
 const { generateToken } = require('../services/jwtService');
+// const { OAuth2Client } = require('google-auth-library');
+
+// const client_id = process.env.GG_CLIENT_ID;
+// const client = new OAuth2Client(client_id);
+
+// const verifyGoogleToken = async (token) => {
+//   const ticket = await client.verifyIdToken({
+//     idToken: token,
+//     audience: client_id,
+//   });
+//   const payload = ticket.getPayload();
+//   return payload;
+// };
+
+// const googleLogin = async (req, res) => {
+//   try {
+//     const { token } = req.body;
+//     const payload = await verifyGoogleToken(token);
+
+//     const { name, email, sub } = payload;
+//     let account = await User.findOne({ email, googleId: sub });
+//     if (!account) {
+//       account = await User.create({
+//         fullName: name,
+//         username: email,
+//         email,
+//         is_active: true,
+//         googleId: sub,
+//       });
+//     }
+//     return res.status(200).json({account});
+//   } catch (error) {
+//     return res.status(500).json({error: error.message});
+//   }
+// }
 
 const register = async (req, res) => {
   try {
@@ -62,8 +97,15 @@ const changePassword = async (req, res) => {
 
     res.json({ message: 'Password updated successfully.' });
   } catch (error) {
+    console.error('Change Password Error:', error.message);
     res.status(500).json({ error: error.message });
   }
+
 };
 
-module.exports = { register, login, changePassword };
+module.exports = { 
+  register,
+  login,
+  changePassword,
+  // googleLogin 
+};

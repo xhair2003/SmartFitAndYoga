@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as Components from './LoginPageStyles';
-import { FaGooglePlusG, FaFacebookF } from 'react-icons/fa';
+import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+//import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -29,12 +30,47 @@ const LoginPage = () => {
         setFormData((state) => ({ ...state, [name]: value }));
     };
 
+    // const handleGoogleSuccess = async (credentialResponse) => {
+    //     try {
+    //         const { credential } = credentialResponse;
+
+    //         // Gửi token Google đến backend để xử lý
+    //         const response = await axios.post('http://localhost:5000/api/auth/google-login', {
+    //             token: credential,
+    //         });
+
+    //         // Xử lý dữ liệu trả về từ backend
+    //         const { token: jwtToken, user } = response.data;
+
+    //         // Lưu thông tin vào localStorage
+    //         localStorage.setItem('token', jwtToken);
+    //         localStorage.setItem('user', JSON.stringify(user));
+
+    //         toast.success("Google login successful!");
+
+    //         // Điều hướng đến trang chủ hoặc nơi cần thiết
+    //         navigate('/home');
+    //     } catch (error) {
+    //         const data = error?.response?.data;
+    //         toast.error(data?.message || "Google login failed. Please try again.");
+    //     }
+    // };
+
+    // const handleGoogleError = () => {
+    //     toast.error("Google login failed. Please try again.");
+    // };
+
     const handleSignUp = async (e) => {
         e.preventDefault();
         const { name, email, password, } = formData;
-    
+
         try {
             const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+            const { token, user } = response.data;
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
             if (response.status === 201) {
                 toast.success("Account created successfully!");
                 toggle(true); // Chuyển sang giao diện Sign In sau khi đăng ký thành công
@@ -78,7 +114,13 @@ const LoginPage = () => {
                     <Components.Form onSubmit={handleSubmit}>
                         <Components.Title>Create Account</Components.Title>
                         <Components.SocialButtons>
-                            <Components.SocialButton><FaGooglePlusG /></Components.SocialButton>
+                            {/* <Components.SocialButton>
+                                <FaGoogle />
+                                <GoogleLogin
+                                    onSuccess={handleGoogleSuccess}
+                                    onError={handleGoogleError}
+                                />
+                            </Components.SocialButton> */}
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
@@ -110,7 +152,7 @@ const LoginPage = () => {
                     <Components.Form onSubmit={handleSubmit}>
                         <Components.Title>Sign In</Components.Title>
                         <Components.SocialButtons>
-                            <Components.SocialButton><FaGooglePlusG /></Components.SocialButton>
+                            <Components.SocialButton><FaGoogle /></Components.SocialButton>
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
@@ -127,7 +169,7 @@ const LoginPage = () => {
                             name='password'
                             onChange={handleInputChange}
                         />
-                        <Components.Anchor href='#'>Forgot your password?</Components.Anchor>
+                        <Components.Anchor href='/forgot-password'>Forgot your password?</Components.Anchor>
                         <Components.Button type="submit">Sign In</Components.Button>
                     </Components.Form>
                 </Components.SignInContainer>

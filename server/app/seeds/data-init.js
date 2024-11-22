@@ -152,5 +152,3 @@ const seedData = async () => {
 
 // Chạy seed script
 seedData();
-
-// t thấy cái ni giống như khởi tạo admin trước á
