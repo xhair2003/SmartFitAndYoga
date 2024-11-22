@@ -64,8 +64,13 @@ export const Form = styled.form`
   text-align: center;
 `;
 
-export const Title = styled.h1`
+export const Title1 = styled.h1`
   color: #000000;
+  font-weight: bold;
+  margin: 0;
+`;
+export const Title2 = styled.h1`
+  color: #fff;
   font-weight: bold;
   margin: 0;
 `;
@@ -81,9 +86,9 @@ export const Input = styled.input`
 
 export const Button = styled.button`
   border-radius: 15px;
-  border: 1px solid #98FF14;
-  background-color: #98FF14;
-  color: #000000;
+  border: 1px solid #2b2f6f;
+  background-color: #2b2f6f;
+  color: #fff;
   font-size: 12px;
   font-weight: bold;
   padding: 12px 45px;
@@ -100,8 +105,8 @@ export const Button = styled.button`
 
 export const GhostButton = styled(Button)`
   background-color: transparent;
-  border-color: #000000; /* Đổi màu viền thành đen */
-  color: #000000; /* Màu chữ đen */
+  border-color: #fff;
+  color: #fff;
   margin: -10px 0;
 `;
 
@@ -113,7 +118,7 @@ export const Retitle = styled.a`
 `;
 
 export const Anchor = styled.a`
-  color: #333;
+  color: #2b2f6f;
   font-size: 13px;
   text-decoration: underline;
   margin: 15px 0;
@@ -177,7 +182,7 @@ export const OverlayPanel = styled.div`
 export const LeftOverlayPanel = styled(OverlayPanel)`
   left: 0;
   transform: translateX(-20%); /* Vị trí ban đầu để trượt vào */
-  background-color: #98FF14;
+  background-color: #2b2f6f;
   border-top-right-radius: 100px;
   border-bottom-right-radius: 100px;
   transition: transform 0.6s ease-in-out; /* Chuyển động mượt */
@@ -186,8 +191,9 @@ export const LeftOverlayPanel = styled(OverlayPanel)`
 
 export const RightOverlayPanel = styled(OverlayPanel)`
   right: 0;
+  color:fff;
   transform: translateX(0%); /* Vị trí ban đầu để trượt vào */
-  background-color: #98FF14;
+  background-color: #2b2f6f;
   border-top-left-radius: 100px;
   border-bottom-left-radius: 100px;
   transition: transform 0.6s ease-in-out; /* Chuyển động mượt */
@@ -196,7 +202,7 @@ export const RightOverlayPanel = styled(OverlayPanel)`
 
 
 export const Paragraph = styled.p`
-  color: #000000;
+  color: #fff;
   font-size: 14px;
   font-weight: 100;
   line-height: 20px;

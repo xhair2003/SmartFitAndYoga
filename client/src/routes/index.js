@@ -1,4 +1,3 @@
-import LandingPage from "../pages/LandingPage/LandingPage.jsx";
 import LoginPage from "../pages/LoginPage/LoginPage.jsx";
 import ErrorPage from "../pages/ErrorPage/ErrorPage.jsx";
 import HomePage from "../pages/HomePage/HomePage.jsx";
@@ -14,7 +13,7 @@ export const routes = [
     {   
         id: 1,
         path: '/',
-        page: LandingPage,
+        page: HomePage,
     },
     {   
         id: 2,
