@@ -1,4 +1,3 @@
-import LandingPage from "../pages/LandingPage/LandingPage.jsx";
 import LoginPage from "../pages/LoginPage/LoginPage.jsx";
 import ErrorPage from "../pages/ErrorPage/ErrorPage.jsx";
 import HomePage from "../pages/HomePage/HomePage.jsx";
@@ -9,12 +8,14 @@ import VerifyOtpPage from "../pages/AuthPage/VerifyOtpPage.jsx";
 import UpdatePasswordPage from "../pages/AuthPage/UpdatePasswordPage.jsx";
 import CreatePage from "../pages/CreatePage/CreatePage.jsx";
 import LoadingPage from "../pages/CreatePage/LoadingPage.jsx";
+import WorkoutPlanPage from "../pages/WorkoutPlansPage/WorkoutPlan.jsx";
+import CompletePage from "../pages/CreatePage/CompletePage.jsx";
 
 export const routes = [
     {   
         id: 1,
         path: '/',
-        page: LandingPage,
+        page: HomePage,
     },
     {   
         id: 2,
@@ -48,21 +49,31 @@ export const routes = [
     },
     {   
         id: 8,
+        path: '/complete',
+        page: CompletePage,
+    },
+    {   
+        id: 9,
         path: '/home',
         page: HomePage,
     },
     {   
-        id: 9,
+        id: 10,
         path: '/about',
         page: AboutPage,
     },
     {   
-        id: 10,
+        id: 11,
         path: '/plans',
         page: MealPlanPage,
     },
+    {
+        id: 12,
+        path: '/workouts',
+        page: WorkoutPlanPage,
+    },
     {   
-        id: 11,
+        id: 13,
         path: '*',
         page: ErrorPage,
     },

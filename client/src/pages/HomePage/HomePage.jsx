@@ -1,28 +1,19 @@
-import React from 'react'; 
-import Navbar from '../../Components/Navbar/Navbar.jsx';
-// import Footer from '../../Components/Footer/Footer.jsx';
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import BackGround from "./BackGround.jsx";
+import Navbar from "../../Components/Navbar/Navbar.jsx";
+import Footer from "../../Components/Footer/Footer.jsx";
+import "./HomePage.css";
 
-
-const HomePage = () => {
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        // Logic để xử lý đăng xuất
-        console.log("Đã đăng xuất");
-        navigate('/login');
-    };
+export default function LandingPage(){
 
     return (
-        <div>
-            <Navbar />
-            <div style={{ height: '120px', backgroundColor: 'black' }}></div>
-            <button onClick={handleLogout} style={{ margin: '20px', padding: '10px' }}>
-                Đăng xuất
-            </button>
-            {/* <Footer /> */}
+        <div className="home-page">
+          <Navbar /> 
+          <BackGround/>
+          <div>
+            
+          </div>
+          <Footer />    
         </div>
     );
-};
-
-export default HomePage;
+}

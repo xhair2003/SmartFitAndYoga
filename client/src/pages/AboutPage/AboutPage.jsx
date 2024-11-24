@@ -6,7 +6,6 @@ import Navbar from '../../Components/Navbar/Navbar';
 const AboutUs = () => {
   return (
     <div>
-      <div style={{ height: '120px', backgroundColor: 'black' }}></div>
       <Navbar />
       <section className="about-us-header" >
         <h2>About US</h2>

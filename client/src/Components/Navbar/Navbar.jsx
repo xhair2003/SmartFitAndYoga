@@ -1,19 +1,33 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
 import './Navbar.css';
+import { CiUser } from "react-icons/ci";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { CiSearch } from "react-icons/ci";
 
 const Navbar = () => {
-
   return (
-    <nav className='nav'>
-      <div className="nav-logo"> <img src={'/logo.png'} alt="logo" className="nav-logo-img" /></div>
-      <ul className="nav-menu">
-        <li><Link to="/create">Create plans</Link></li>
-        <li><Link to="/">Workout</Link></li>
-        <li><Link to="/plans">Plans</Link></li>
-        <li><Link to="/process tracking">Process tracking</Link></li>
-        <li><Link to="/about">About</Link></li>
-        <li><Link to="/login" className='nav-start' >Start</Link></li>
-      </ul>
+    <nav className="navbar">
+      <div className="navbar-logo">
+        <a href="/">
+          <img src="logo.png" alt="Logo" />
+        </a>
+      </div>
+      <div className="spacer"></div>
+      <div className="navbar-links">
+        <a href="/create" className='navbar-a'>CREATE PLANS</a>
+        <a href="/workouts" className='navbar-a'>WORKOUT PLANS</a>
+        <a href="/plans" className='navbar-a'>NUTRITION PLANS</a>
+        <a href="/" className='navbar-a'>PROGRESS TRACKING</a>
+        <a href="/about" className='navbar-a'>ABOUT</a>
+      </div>
+      <div className="spacer"></div>
+      <div className="navbar-search-container">
+        <CiSearch className="fas fa-search navbar-search-icon"/>  
+        <input type="text" className="navbar-search" placeholder="Search..." />
+      </div>
+      <a href="/"><IoIosNotificationsOutline className='navbar-logo-icon' /></a>
+      <a href="/login"><CiUser className='navbar-logo-icon' /></a>
+      
     </nav>
   );
 };

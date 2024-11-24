@@ -133,6 +133,9 @@ const MealPlanPage = () => {
                         {meal.macros.fat}g Fat
                       </S.NutritionItem>
                     </S.NutritionInfo>
+                    <S.RecipeLink>
+                      <a href={meal.recipeLink} target="_blank" rel="noopener noreferrer">Recipe Link</a>
+                    </S.RecipeLink>
                   </S.MealContent>
                 </S.MealCard>
               ))}

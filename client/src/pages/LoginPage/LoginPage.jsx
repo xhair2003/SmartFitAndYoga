@@ -112,7 +112,7 @@ const LoginPage = () => {
                 {/* Sign Up Container */}
                 <Components.SignUpContainer signinIn={signIn}>
                     <Components.Form onSubmit={handleSubmit}>
-                        <Components.Title>Create Account</Components.Title>
+                        <Components.Title1>Create Account</Components.Title1>
                         <Components.SocialButtons>
                             {/* <Components.SocialButton>
                                 <FaGoogle />
@@ -150,7 +150,7 @@ const LoginPage = () => {
                 {/* Sign In Container */}
                 <Components.SignInContainer signinIn={signIn}>
                     <Components.Form onSubmit={handleSubmit}>
-                        <Components.Title>Sign In</Components.Title>
+                        <Components.Title1>Sign In</Components.Title1>
                         <Components.SocialButtons>
                             <Components.SocialButton><FaGoogle /></Components.SocialButton>
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
@@ -178,13 +178,13 @@ const LoginPage = () => {
                 <Components.OverlayContainer signinIn={signIn}>
                     <Components.Overlay signinIn={signIn}>
                         <Components.LeftOverlayPanel signinIn={signIn}>
-                            <Components.Title>Welcome Back!</Components.Title>
+                            <Components.Title2>Welcome Back!</Components.Title2>
                             <Components.Paragraph>Enter your personal details to use all site features</Components.Paragraph>
                             <Components.GhostButton onClick={() => toggle(true)}>Sign In</Components.GhostButton>
                         </Components.LeftOverlayPanel>
 
                         <Components.RightOverlayPanel signinIn={signIn}>
-                            <Components.Title>Hello, Friend!</Components.Title>
+                            <Components.Title2>Hello, Friend!</Components.Title2>
                             <Components.Paragraph>Register to use all site features</Components.Paragraph>
                             <Components.GhostButton onClick={() => toggle(false)}>Sign Up</Components.GhostButton>
                         </Components.RightOverlayPanel>

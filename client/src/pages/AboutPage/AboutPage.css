@@ -1,7 +1,7 @@
 .about-us-container {
   font-family: 'Roboto', sans-serif; /* Đổi font thành Roboto cho toàn bộ container */
   background-color: #1e213d;
-  color: #fff;
+  color: #000000;
   padding: 50px 20px;
   position: relative; 
 } 
@@ -86,6 +86,7 @@
 .about-text {
   width: 100%;
   margin-right: auto;
+  color:#000000;
 }
 
 .about-text h3 {
@@ -107,7 +108,9 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-*, *::before, *::after {
+.about-us-container *, 
+.about-us-container *::before, 
+.about-us-container *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
