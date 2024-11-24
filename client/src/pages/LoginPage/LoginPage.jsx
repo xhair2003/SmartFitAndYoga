@@ -4,9 +4,14 @@ import * as Components from './LoginPageStyles';
 import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 //import { GoogleLogin } from '@react-oauth/google';
+=======
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+>>>>>>> cefe2b1d5a94b9f9d5539108e7d2a41638084db1
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -15,6 +20,10 @@ const LoginPage = () => {
         name: '',
         email: '',
         password: '',
+<<<<<<< HEAD
+=======
+        //repassword: '', // Thêm repassword
+>>>>>>> cefe2b1d5a94b9f9d5539108e7d2a41638084db1
     });
 
     useEffect(() => {
@@ -30,6 +39,7 @@ const LoginPage = () => {
         setFormData((state) => ({ ...state, [name]: value }));
     };
 
+<<<<<<< HEAD
     // const handleGoogleSuccess = async (credentialResponse) => {
     //     try {
     //         const { credential } = credentialResponse;
@@ -74,12 +84,42 @@ const LoginPage = () => {
             if (response.status === 201) {
                 toast.success("Account created successfully!");
                 toggle(true); // Chuyển sang giao diện Sign In sau khi đăng ký thành công
+=======
+    const handleSignup = async () => {
+        // Kiểm tra đầu vào
+        if (!formData.email || !formData.password || !formData.repassword) {
+            alert("All fields are required!");
+            return;
+        }
+        if (formData.password !== formData.repassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                toast.success("Sign up successful!");
+                toggle(true); // Chuyển về trang đăng nhập sau khi đăng ký thành công
+            } else {
+                alert(data.error || "Sign up failed.");
+>>>>>>> cefe2b1d5a94b9f9d5539108e7d2a41638084db1
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to register. Please try again.");
         }
     };
 
+<<<<<<< HEAD
     const handleSignIn = async (e) => {
         e.preventDefault();
         const { email, password } = formData;
@@ -103,6 +143,39 @@ const LoginPage = () => {
             handleSignIn(e);
         } else {
             handleSignUp(e);
+=======
+    const handleSignin = async () => {
+        // Kiểm tra đầu vào
+        if (!formData.email || !formData.password) {
+            alert("Both email and password are required!");
+            return;
+        }
+        try {
+            const response = await fetch("http://localhost:5000/api/auth", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password
+                })
+            });
+
+            const data = await response.json();
+            console.log("Response data:", data); // Log phản hồi từ server
+            //console.log("formData:", formData);
+
+            if (response.ok) {
+                toast.success("Sign in successful!");
+                navigate('/home');
+            } else {
+                alert(data.error || "Login failed. Please check your credentials.");
+            }
+        } catch (error) {
+            console.error("Signin error:", error);
+            alert("An error occurred during login. Please try again later.");
+>>>>>>> cefe2b1d5a94b9f9d5539108e7d2a41638084db1
         }
     };
 
