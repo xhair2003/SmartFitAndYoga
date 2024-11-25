@@ -8,6 +8,7 @@ import VerifyOtpPage from "../pages/AuthPage/VerifyOtpPage.jsx";
 import UpdatePasswordPage from "../pages/AuthPage/UpdatePasswordPage.jsx";
 import CreatePage from "../pages/CreatePage/CreatePage.jsx";
 import LoadingPage from "../pages/CreatePage/LoadingPage.jsx";
+import WorkoutPlans from "../pages/WorkoutPlansPage/WorkoutPlan.jsx";
 
 export const routes = [
     {   
@@ -62,7 +63,15 @@ export const routes = [
     },
     {   
         id: 11,
+        path: '/workout-plans',
+        page: WorkoutPlans,
+    },
+    {   
+        id: 12,
         path: '*',
         page: ErrorPage,
     },
+
+
+
 ];

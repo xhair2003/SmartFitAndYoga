@@ -15,7 +15,7 @@ const Navbar = () => {
       <div className="spacer"></div>
       <div className="navbar-links">
         <a href="/" className='navbar-a'>CREATE PLANS</a>
-        <a href="/" className='navbar-a'>WORKOUT PLANS</a>
+        <a href="/workout-plans" className='navbar-a'>WORKOUT PLANS</a>
         <a href="/plans" className='navbar-a'>NUTRITION PLANS</a>
         <a href="/" className='navbar-a'>PROGRESS TRACKING</a>
         <a href="/about" className='navbar-a'>ABOUT</a>
