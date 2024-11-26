@@ -6,6 +6,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import Navbar from "../../Components/Navbar/Navbar";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -71,6 +72,7 @@ const LoginPage = () => {
     };
 
     return (
+        
         <Components.Background>
             <Components.Container>
                 {/* Sign Up Container */}

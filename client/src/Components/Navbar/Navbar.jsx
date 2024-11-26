@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { CiUser } from "react-icons/ci";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 
 const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Giả lập trạng thái đăng nhập
+  const navigate = useNavigate();
+
+  const handleUserClick = () => {
+    if (isLoggedIn) {
+      navigate('/profile'); // Chuyển hướng đến trang Profile
+    } else {
+      navigate('/login'); // Chuyển hướng đến trang Login
+    }
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-logo">
@@ -26,8 +38,9 @@ const Navbar = () => {
         <input type="text" className="navbar-search" placeholder="Search..." />
       </div>
       <a href="/"><IoIosNotificationsOutline className='navbar-logo-icon' /></a>
-      <a href="/login"><CiUser className='navbar-logo-icon' /></a>
-      
+      <a onClick={handleUserClick} className="navbar-logo-icon">
+        <CiUser />
+      </a>
     </nav>
   );
 };

@@ -9,6 +9,7 @@ import UpdatePasswordPage from "../pages/AuthPage/UpdatePasswordPage.jsx";
 import CreatePage from "../pages/CreatePage/CreatePage.jsx";
 import LoadingPage from "../pages/CreatePage/LoadingPage.jsx";
 import WorkoutPlans from "../pages/WorkoutPlansPage/WorkoutPlan.jsx";
+import UserProfilePage from "../pages/User/UserProfilePage.jsx"
 
 export const routes = [
     {   
@@ -68,6 +69,11 @@ export const routes = [
     },
     {   
         id: 12,
+        path: '/profile',
+        page: UserProfilePage,
+    },
+    {   
+        id: 13,
         path: '*',
         page: ErrorPage,
     },
