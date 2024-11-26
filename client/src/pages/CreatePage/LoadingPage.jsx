@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate từ react-router-dom
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import Stepper from "../../Components/Stepper/Stepper";
 import "./LoadingPageStyles.css";
 
@@ -15,21 +15,31 @@ const LoadingPage = () => {
     "Ingredients",
   ];
 
-  const [activeDay, setActiveDay] = useState(0); // State để theo dõi vòng tròn nào được làm nổi bật
-  const navigate = useNavigate(); // Hook để điều hướng
+  const [activeDay, setActiveDay] = useState(0); // State to track the active day
+  const navigate = useNavigate(); // Hook to navigate
+
+  // Get the token from localStorage
+  const getToken = () => localStorage.getItem("token");
 
   useEffect(() => {
-    if (activeDay < days.length) {
-      // Tạo interval để tăng activeDay
-      const interval = setInterval(() => {
-        setActiveDay((prev) => prev + 1); // Tăng vòng tròn
-      }, 3000); // Cứ 3 giây
-      return () => clearInterval(interval); // Xóa interval khi component bị unmount
-    } else {
-      // Khi tất cả vòng tròn hoàn thành, điều hướng sang trang khác
-      navigate("/complete"); // Chuyển sang trang /complete (thay đổi URL nếu cần)
+    const token = getToken();
+    if (!token) {
+      // If no token is found, redirect to login page
+      navigate("/login"); // Redirect to login page if token is missing
+      return;
     }
-  }, [activeDay, days.length, navigate]); // Gồm activeDay để theo dõi trạng thái
+
+    if (activeDay < days.length) {
+      // Create interval to increment activeDay
+      const interval = setInterval(() => {
+        setActiveDay((prev) => prev + 1); // Increment the active day
+      }, 1000); // Every second
+      return () => clearInterval(interval); // Clear interval on unmount
+    } else {
+      // When all circles are completed, navigate to the "complete" page
+      navigate("/plans");
+    }
+  }, [activeDay, days.length, navigate]); // Include activeDay to track changes
 
   return (
     <div className="loading-container">
@@ -38,7 +48,7 @@ const LoadingPage = () => {
         <h1>Sit tight, we're cooking up your plan</h1>
         <p>
           Our AI is hard at work building your fully curated and customised
-          plan so it can take a little bit of time.
+          plan, so it can take a little bit of time.
         </p>
       </div>
       <div className="loading-days">

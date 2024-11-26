@@ -7,15 +7,13 @@ import { IoLogoWechat } from "react-icons/io5";
 const App = () => {
   return (
     //<GoogleOAuthProvider clientId={process.env.REACT_APP_GG_CLIENT_ID}>
-      <div>
-        <Toaster position="top-right" />
+    <div>
+      <Toaster position="top-right" />
       <Router>
         <Routes>
           {routes.map((route) => {
             const Page = route.page;
-            return (
-              <Route key={route.id} path={route.path} element={<Page />} />
-            );
+            return <Route key={route.id} path={route.path} element={<Page />} />;
           })}
         </Routes>
       </Router>

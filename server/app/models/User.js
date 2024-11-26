@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
   age: { type: Number, required: false },
   weight: { type: Number },
   height: { type: Number },
-  role: { type: String, enum: ['Admin', 'User'], default: 'User' }, // Chỉ Admin và User
+  role: { type: String, enum: ['Admin', 'User'], default: 'User' },
+  resetPasswordToken: { type: String },
+  resetPasswordExpiresAt: { type: Date },
 });
 
 // Hash password trước khi lưu

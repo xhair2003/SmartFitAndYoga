@@ -124,6 +124,7 @@ import React, { useState } from "react";
 import Stepper from "../../Components/Stepper/Stepper"; // Import Stepper
 import './CreatePageStyles.css';
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Import Axios for API calls
 
 const CreatePage = () => {
   const [formData, setFormData] = useState({
@@ -135,6 +136,7 @@ const CreatePage = () => {
     allergies: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null); // For handling API errors
 
   const navigate = useNavigate();
 
@@ -143,23 +145,66 @@ const CreatePage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  // Get the token from localStorage
+  const getToken = () => localStorage.getItem("token");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setIsSubmitting(true); // Bật trạng thái xử lý
+    // Validate form inputs
+    if (!formData.age || !formData.height || !formData.weight) {
+      alert("Please fill in all the required fields.");
+      return;
+    }
+
+    setIsSubmitting(true); // Set loading state
     console.log("Form Data Submitted: ", formData);
 
-    // Giả lập xử lý dữ liệu hoặc gọi API
-    setTimeout(() => {
-      setIsSubmitting(false); // Tắt trạng thái xử lý
-      navigate("/loading"); // Điều hướng đến Loading Page
-    }, 3000); // Thời gian giả lập xử lý 3 giây
+    // Prepare the payload data for the server
+    const payload = {
+      age: parseInt(formData.age, 10),
+      weight: parseFloat(formData.weight),
+      height: parseFloat(formData.height),
+      sex: formData.sex,
+      goal: formData.goal,
+      allergies: formData.allergies,
+    };
+
+    try {
+      // Make API call to generate meal plan
+      const token = getToken();
+      if (!token) {
+        throw new Error("Token is missing. Please log in again.");
+      }
+
+      const response = await axios.post(
+        "http://localhost:5000/api/meal-plans", // Replace with your server URL
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Meal plan generated:", response.data);
+
+      // Navigate to another page with the response data
+      navigate("/loading", { state: { mealPlan: response.data } });
+    } catch (err) {
+      console.error("Error generating meal plan:", err);
+      setError("Failed to generate meal plan. Please try again.");
+    } finally {
+      setIsSubmitting(false); // Turn off loading state
+    }
   };
 
   return (
     <div className="container">
       <Stepper currentStep={1} />
       <h1>Create Your Plan</h1>
+      {error && <p style={{ color: "red" }}>{error}</p>} {/* Show error message if any */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="age">Age</label>
