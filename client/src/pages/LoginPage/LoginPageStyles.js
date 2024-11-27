@@ -6,7 +6,7 @@ export const Background = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 300;
   background-image: url('/bg.png');
   background-size: cover;
   background-position: center;

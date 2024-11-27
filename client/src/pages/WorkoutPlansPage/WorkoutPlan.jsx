@@ -124,7 +124,7 @@ const WorkoutPlan = () => {
                 <h2>{selectedExercise.title}</h2>
                 <button className="close-btn" onClick={() => setSelectedExercise(null)}>&times;</button>
               </div>
-              <div className="modal-content">
+              <div >
                 <p><strong>Duration:</strong> {selectedExercise.duration} mins</p>
                 <p><strong>Intensity:</strong> {selectedExercise.intensity}</p>
                 <p><strong>Description:</strong> {selectedExercise.description}</p>
