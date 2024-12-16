@@ -1,0 +1,27 @@
+Check mình đang ở nhánh nào
+git checkout 
+
+Ví dụ ở đây có 4 nhánh 
+    + Hai
+    + bach
+    + Bao
+    + Mai
+thì khi cập nhật code sẽ chuyển nhánh đó
+git checkout <tên_nhánh>
+
+cập nhật code của mọi người về nhánh mình
+git pull origin <tên_nhánh>
+
+
+////////////////////////////////////////
+git add <tên_thư_mục>
+VD: git add .
+
+git commit -m <comment_các_kiểu>
+VD: git commit -m Hello World
+
+đẩy code lên nhánh ....
+git push origin <tên_nhánh>
+
+cập nhật code của mọi người về nhánh mình
+git pull origin <tên_nhánh>
