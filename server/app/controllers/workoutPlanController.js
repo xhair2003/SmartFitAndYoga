@@ -6,12 +6,12 @@ const { generateWorkoutPlan } = require('../services/generateWorkoutPlan');
 
 const createWeeklyWorkoutPlan = async (req, res) => {
   try {
-    const { age, weight, goal } = req.body;
+    const { age, weight, goal, gender, height } = req.body;
 
-    if (!age || !weight || !goal) {
+    if (!age || !weight || !goal || !gender || !height) {
       return res
         .status(400)
-        .json({ message: 'Age, weight, and goal are required.' });
+        .json({ message: 'Age, weight, goal, gender, and height are required.' });
     }
 
     // Danh sách các ngày trong tuần

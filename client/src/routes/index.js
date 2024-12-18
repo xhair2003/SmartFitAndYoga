@@ -47,11 +47,11 @@ export const routes = [
         path: '/loading',
         page: LoadingPage,
     },
-    {   
-        id: 8,
-        path: '/complete',
-        page: CompletePage,
-    },
+    // {   
+    //     id: 8,
+    //     path: '/complete',
+    //     page: CompletePage,
+    // },
     {   
         id: 9,
         path: '/home',

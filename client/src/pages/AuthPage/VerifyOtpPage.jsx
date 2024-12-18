@@ -1,92 +1,75 @@
-// client/src/pages/VerifyOtpPage/VerifyOtpPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import * as Components from './AuthStyles';
-import './Auth.css';
-import Timer from './Timer';
 import { useNavigate } from "react-router-dom";
+import Timer from './Timer';
 
 const VerifyOtpPage = () => {
   const navigate = useNavigate();
-
-  const ref1 = useRef(null);
-  const ref2 = useRef(null);
-  const ref3 = useRef(null);
-  const ref4 = useRef(null);
-  const ref5 = useRef(null);
-  const ref6 = useRef(null);
-
-  const inputRef = [ref1, ref2, ref3, ref4, ref5, ref6];
-
-  const [otp1, setOtp1] = useState('');
-  const [otp2, setOtp2] = useState('');
-  const [otp3, setOtp3] = useState('');
-  const [otp4, setOtp4] = useState('');
-  const [otp5, setOtp5] = useState('');
-  const [otp6, setOtp6] = useState('');
-
-  const otpArray = [setOtp1, setOtp2, setOtp3, setOtp4, setOtp5, setOtp6];
-
-  //const [timer, setTimer] = useState(60); // 60 seconds countdown
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const inputRefs = useRef([]);
 
   useEffect(() => {
-    if (ref1.current) {
-      ref1.current.focus();
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
     }
-
   }, []);
 
-  const inputChange = (event, location) => {
-    if (location < 5 && event.target.value) {
-      inputRef[location + 1].current.focus();
+  const handleChange = (element, index) => {
+    if (isNaN(element.value)) return false;
+
+    setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+
+    if (element.nextSibling) {
+      element.nextSibling.focus();
     }
-    otpArray[location](event.target.value);
   };
 
-  const submitOtp = (event) => {
-    event.preventDefault();
-    const finalOtp = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
-    console.log(finalOtp);
-    navigate('/forgot-password/verify-otp/update-password');
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
 
+  const submitHandler = (event) => {
+    event.preventDefault();
+    console.log('Verifying OTP:', otp.join(''));
+    navigate('/forgot-password/verify-otp/update-password');
   };
 
   return (
     <Components.Container>
-      <Components.Title>Verify your OTP</Components.Title>
-      <Components.Subtitle>Enter the 6-digit OTP we just sent to your email</Components.Subtitle>
-
-      <Components.OtpContainer>
-        {inputRef.map((item, index) => (
-          <Components.OtpInput
-            required
-            key={index}
-            ref={item}
-            onChange={(event) => inputChange(event, index)}
-            onKeyDown={(event) => {
-              if (event.key === 'Backspace') {
-                if (event.target.value === '' && index > 0) {
-                  // Nếu ô hiện tại trống và không phải ô đầu tiên
-                  inputRef[index - 1].current.focus();
-                }
-              }
-            }}
-            onInput={(event) => {
-              const value = event.target.value;
-              if (value.length > 1) {
-                event.target.value = value.slice(0, 1);
-              }
-            }}
-            type="number"
-          />
-        ))}
-      </Components.OtpContainer>
-      <Components.Button onClick={submitOtp}>Verify</Components.Button>
-      <Components.Timer>
-        <Timer/>
-      </Components.Timer>
-      <Components.Link href="/login">Back to login</Components.Link>
+      <Components.FormContainer>
+        <Components.Title>Verify OTP</Components.Title>
+        <Components.Subtitle>
+          Enter the 6-digit code sent to your email
+        </Components.Subtitle>
+        <form onSubmit={submitHandler}>
+          <Components.OtpContainer>
+            {otp.map((data, index) => {
+              return (
+                <Components.OtpInput
+                  key={index}
+                  type="text"
+                  maxLength="1"
+                  value={data}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  onChange={(e) => handleChange(e.target, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onFocus={(e) => e.target.select()}
+                />
+              );
+            })}
+          </Components.OtpContainer>
+          <Components.Button type="submit">Verify OTP</Components.Button>
+        </form>
+        <Components.Timer>
+          <Timer />
+        </Components.Timer>
+        <Components.Link href="/forgot-password">Back</Components.Link>
+      </Components.FormContainer>
     </Components.Container>
   );
-}
+};
 
 export default VerifyOtpPage;
+

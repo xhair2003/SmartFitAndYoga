@@ -6,7 +6,6 @@ import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import Navbar from "../../Components/Navbar/Navbar";
 //import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
@@ -116,13 +115,7 @@ const LoginPage = () => {
                     <Components.Form onSubmit={handleSubmit}>
                         <Components.Title1>Create Account</Components.Title1>
                         <Components.SocialButtons>
-                            {/* <Components.SocialButton>
-                                <FaGoogle />
-                                <GoogleLogin
-                                    onSuccess={handleGoogleSuccess}
-                                    onError={handleGoogleError}
-                                />
-                            </Components.SocialButton> */}
+                            <Components.SocialButton><FaGoogle /></Components.SocialButton>
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>

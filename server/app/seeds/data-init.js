@@ -8,7 +8,7 @@ const WeeklyWorkoutPlan = require('../models/WeeklyWorkoutPlan');
 const Workout = require('../models/Workout');
 
 mongoose
-  .connect('mongodb://localhost:27017/smart-yoga234567', {
+  .connect('mongodb+srv://bachtran:noname@cluster0.pgvoakh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
