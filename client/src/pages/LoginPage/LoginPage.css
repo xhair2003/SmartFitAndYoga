@@ -13,4 +13,5 @@
   font-family: "Montserrat", sans-serif;
   height: 100vh;
   margin: -20px 0 50px;
+  z-index: 1000;
 }

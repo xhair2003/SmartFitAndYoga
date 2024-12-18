@@ -2,7 +2,8 @@ import * as React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { routes } from './routes';
 import { Toaster } from 'react-hot-toast';
-import { IoLogoWechat } from "react-icons/io5";
+import ChatBot from './pages/Chat/ChatBot';
+
 
 const App = () => {
   return (
@@ -17,18 +18,9 @@ const App = () => {
           })}
         </Routes>
       </Router>
-      <div style={chatIconStyle}>
-        <IoLogoWechat size={50} color="white" />
-      </div>
+      <ChatBot/>
     </div>
   );
-};
-const chatIconStyle = {
-  position: 'fixed',
-  bottom: '15px',
-  right: '20px',
-  padding: '15px',
-  cursor: 'pointer',
 };
 
 export default App;
