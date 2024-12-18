@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const workoutSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['Cardio', 'Strength', 'Flexibility'],
+    enum: ['Cardio', 'Strength', 'Flexibility','Core','HIIT'],
   }, // Loại bài tập
   title: { type: String }, // Tên bài tập
   duration: { type: Number }, // Thời gian tập luyện (phút)

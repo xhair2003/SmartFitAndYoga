@@ -1,0 +1,58 @@
+/* Tổng container của dashboard */
+.dashboard-container {
+    display: flex;
+    flex-direction: column; /* Chiếm toàn bộ chiều cao màn hình */
+    padding: 20px;
+    box-sizing: border-box; /* Bao gồm padding trong tính toán kích thước */
+    background-color: #f4f7fa; /* Màu nền nhạt */
+    overflow-y: auto; /* Nếu nội dung vượt quá 100vh, cho phép cuộn */
+  }
+  
+  .dashboard-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .dashboard-container p {
+    margin-bottom: 20px;
+    color: #666;
+  }
+  
+  /* Dòng biểu đồ đầu tiên */
+  .chart-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Các biểu đồ */
+  .chart-section {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Đảm bảo không tràn ngoài */
+  }
+  
+  .chart-section h3 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .chart-section canvas {
+    max-height: 300px; /* Giới hạn chiều cao của biểu đồ */
+    height: 100%; /* Chiều cao đầy đủ bên trong chart-section */
+  }
+  
+
+  @media (max-width: 768px) {
+    .chart-row {
+      flex-direction: column;
+    }
+  
+    .chart-section {
+      margin-bottom: 20px;
+    }
+  }
+  

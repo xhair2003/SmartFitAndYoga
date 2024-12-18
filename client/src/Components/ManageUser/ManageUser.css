@@ -1,0 +1,198 @@
+.manage-user-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .manage-user-container h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .manage-user-container p {
+    margin-bottom: 20px;
+    color: #666;
+  }
+  
+  /* Nút thêm người dùng */
+  .add-user-button {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .add-user-button:hover {
+    background-color: #1a2033;
+  }
+  
+  /* Form thêm người dùng */
+  .add-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-user-form label {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .add-user-form input,
+  .add-user-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .submit-button {
+    background-color: #28a745;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+  
+  .submit-button:hover {
+    background-color: #218838;
+  }
+  
+  /* Bảng hiển thị người dùng */
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .user-table th,
+  .user-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .user-table th {
+    background-color: #f4f7fa;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .user-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Nút chỉnh sửa và xóa */
+  .edit-button,
+  .delete-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .edit-button {
+    background-color: #56b3ff;
+    color: #fff;
+    margin-right: 5px;
+  }
+  
+  .delete-button {
+    background-color: #ff4d4f;
+    color: #fff;
+  }
+  
+  .edit-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .edit-user-form label {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .edit-user-form input,
+  .edit-user-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .edit-user-form .submit-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+  
+  .edit-user-form .submit-button:hover {
+    background-color: #0056b3;
+  }
+
+  .notification {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .confirm-delete {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #ffdddd;
+    border: 1px solid #ff4d4f;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .confirm-delete button {
+    margin: 5px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .confirm-delete button:first-of-type {
+    background-color: #ff4d4f;
+    color: white;
+  }
+  
+  .confirm-delete button:last-of-type {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .confirm-delete button:hover {
+    opacity: 0.8;
+  }
+  

@@ -10,6 +10,7 @@ import CreatePage from "../pages/CreatePage/CreatePage.jsx";
 import LoadingPage from "../pages/CreatePage/LoadingPage.jsx";
 import WorkoutPlans from "../pages/WorkoutPlansPage/WorkoutPlan.jsx";
 import UserProfilePage from "../pages/User/UserProfilePage.jsx"
+import AdminDashPage from "../pages/DashBoard_Admin/AdminDashPage.jsx";
 
 export const routes = [
     {   
@@ -74,6 +75,11 @@ export const routes = [
     },
     {   
         id: 13,
+        path: '/admin-dashboard',
+        page: AdminDashPage,
+    },
+    {   
+        id: 14,
         path: '*',
         page: ErrorPage,
     },

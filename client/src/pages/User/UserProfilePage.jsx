@@ -8,11 +8,12 @@ const initialUser = {
   id: 1,
   name: "John Doe",
   email: "johndoe@example.com",
-  password: "hashed_password_1", // Đây chỉ là minh họa, mật khẩu thực tế nên được hash
+  password: "hashed_password_1",
   age: 28,
   weight: 70.5,
   height: 175.3,
   role: "user",
+  gender: "male", // Thêm giới tính (male hoặc female)
   created_at: "2023-01-01 12:00:00",
   updated_at: "2023-01-01 12:00:00",
 };
@@ -52,10 +53,20 @@ const UserProfilePage = () => {
         <h1>PROFILE</h1>
       </div>
       <div className="profile-container">
-        <h1 className="profile-header">User Profile</h1>
+
         <div className="profile-card">
+        <div className="avatar-container">
+          <img
+            src={user.gender === "male" ? "./man.png" : "./woman.png"}
+            alt="User Avatar"
+            className="avatar"
+          />
+        </div>
           <p>
             <strong>Name:</strong> {user.name}
+          </p>
+          <p>
+            <strong>Gender:</strong> {user.gender}
           </p>
           <p>
             <strong>Email:</strong> {user.email}
@@ -78,9 +89,14 @@ const UserProfilePage = () => {
           <p>
             <strong>Updated At:</strong> {user.updated_at}
           </p>
-          <button className="edit-btn" onClick={handleEdit}>
-            Edit
-          </button>
+          <div className="buttonstyle">
+              <button className="edit-btn" onClick={handleEdit}>
+                Edit
+              </button>
+              <button className="logout-btn" >
+                Logout
+              </button>
+          </div>
         </div>
       </div>
 
@@ -96,6 +112,14 @@ const UserProfilePage = () => {
               onChange={handleChange}
             />
           </div>
+          <div className="profile-field">
+            <label>Gender:</label>
+            <select name="gender" value={formData.gender} onChange={handleChange}>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
           <div className="profile-field">
             <label>Email:</label>
             <input

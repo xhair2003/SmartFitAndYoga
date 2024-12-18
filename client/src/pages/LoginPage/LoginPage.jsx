@@ -129,7 +129,7 @@ const LoginPage = () => {
                             name='password'
                             onChange={handleInputChange}
                         />
-                        <Components.Anchor href='#'>Forgot your password?</Components.Anchor>
+                        <Components.Anchor href='/forgot-password'>Forgot your password?</Components.Anchor>
                         <Components.Button type="submit">Sign In</Components.Button>
                     </Components.Form>
                 </Components.SignInContainer>
