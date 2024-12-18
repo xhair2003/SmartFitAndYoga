@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { CiUser } from "react-icons/ci";
@@ -6,11 +6,11 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Giả lập trạng thái đăng nhập
   const navigate = useNavigate();
 
   const handleUserClick = () => {
-    if (isLoggedIn) {
+    const token = localStorage.getItem('token'); // Kiểm tra token trong localStorage
+    if (token) {
       navigate('/profile'); // Chuyển hướng đến trang Profile
     } else {
       navigate('/login'); // Chuyển hướng đến trang Login
