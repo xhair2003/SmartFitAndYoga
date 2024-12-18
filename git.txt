@@ -1,3 +1,5 @@
+ĐÂY LÀ HƯỚNG DẪN SỬ DỤNG GITHUB
+
 Check mình đang ở nhánh nào
 git checkout 
 
