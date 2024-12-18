@@ -97,13 +97,13 @@
 }
 /* Daily Item Styles */
 .workout-daily-item {
-  background-color: #f8f9fa; /* Màu nền sáng hơn để dễ nhìn */
+  background-color: #f8f9fa;
   padding: 20px 30px;
-  border-radius: 12px; /* Bo góc nhẹ cho phần tử */
+  border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển động */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Thêm shadow nhẹ cho các item */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 100%;
   text-align: center; /* Căn giữa tiêu đề và thông tin bên trong */
 }
@@ -120,11 +120,11 @@
 }
 
 .workout-daily-item {
-  border: 1px solid #ccc; /* Đường viền cho mỗi bài tập */
-  padding: 16px; /* Khoảng cách bên trong */
-  border-radius: 8px; /* Bo góc */
-  background-color: #a2b5ee; /* Màu nền */
-  transition: transform 0.2s; /* Hiệu ứng chuyển động */
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #a2b5ee;
+  transition: transform 0.2s;
 }
 
 .workout-daily-item:hover {

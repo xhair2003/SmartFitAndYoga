@@ -18,7 +18,7 @@ const WorkoutPlan = () => {
       setLoading(true); // Bắt đầu tải dữ liệu
       const token = localStorage.getItem('token'); // Lấy token từ localStorage
       if (!token) {
-        setError('Token is missing. Please log in again.'); // Nếu không có token, hiển thị lỗi
+        setError('Please login to use this function');
         setLoading(false); // Dừng trạng thái loading
         return;
       }

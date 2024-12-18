@@ -11,6 +11,9 @@ import LoadingPage from "../pages/CreatePage/LoadingPage.jsx";
 import WorkoutPlans from "../pages/WorkoutPlansPage/WorkoutPlan.jsx";
 import UserProfilePage from "../pages/User/UserProfilePage.jsx"
 import AdminDashPage from "../pages/DashBoard_Admin/AdminDashPage.jsx";
+import ProgressTracking from "../pages/ProgressTrackingPage/ProgressTracking.jsx";
+import Blog from "../pages/Blog/Blog.jsx";
+import ToolForUser from "../pages/ToolForUser/ToolForUser.jsx";
 
 export const routes = [
     {   
@@ -60,7 +63,7 @@ export const routes = [
     },
     {   
         id: 10,
-        path: '/plans',
+        path: '/meal-plans',
         page: MealPlanPage,
     },
     {   
@@ -75,11 +78,26 @@ export const routes = [
     },
     {   
         id: 13,
+        path: '/tracking',
+        page: ProgressTracking,
+    },
+    {   
+        id: 14,
         path: '/admin-dashboard',
         page: AdminDashPage,
     },
     {   
-        id: 14,
+        id: 15,
+        path: '/blogs',
+        page: Blog,
+    },
+    {   
+        id: 16,
+        path: '/tools',
+        page: ToolForUser,
+    },
+    {   
+        id: 17,
         path: '*',
         page: ErrorPage,
     },

@@ -1,19 +1,19 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./Navbar.css";
 import { CiUser } from "react-icons/ci";
-import { IoIosNotificationsOutline } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
+import Notification from "../Notification/Notification";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const handleUserClick = () => {
-    const token = localStorage.getItem('token'); // Kiểm tra token trong localStorage
+    const token = localStorage.getItem("token");
     if (token) {
-      navigate('/profile'); // Chuyển hướng đến trang Profile
+      navigate("/profile");
     } else {
-      navigate('/login'); // Chuyển hướng đến trang Login
+      navigate("/login");
     }
   };
 
@@ -26,18 +26,31 @@ const Navbar = () => {
       </div>
       <div className="spacer"></div>
       <div className="navbar-links">
-        <a href="/" className='navbar-a'>CREATE PLANS</a>
-        <a href="/workout-plans" className='navbar-a'>WORKOUT PLANS</a>
-        <a href="/plans" className='navbar-a'>NUTRITION PLANS</a>
-        <a href="/" className='navbar-a'>PROGRESS TRACKING</a>
-        <a href="/about" className='navbar-a'>ABOUT</a>
+        <a href="/" className="navbar-a">
+          CREATE PLANS
+        </a>
+        <a href="/workout-plans" className="navbar-a">
+          WORKOUT PLANS
+        </a>
+        <a href="/meal-plans" className="navbar-a">
+          NUTRITION PLANS
+        </a>
+        <a href="/tracking" className="navbar-a">
+          PROGRESS TRACKING
+        </a>
+        <a href="/about" className="navbar-a">
+          ABOUT
+        </a>
+        
       </div>
       <div className="spacer"></div>
       <div className="navbar-search-container">
-        <CiSearch className="fas fa-search navbar-search-icon"/>  
+        <CiSearch className="fas fa-search navbar-search-icon" />
         <input type="text" className="navbar-search" placeholder="Search..." />
       </div>
-      <a href="/"><IoIosNotificationsOutline className='navbar-logo-icon' /></a>
+      {/* Dropdown Notification */}
+      <Notification/>
+      {/* User Icon */}
       <a onClick={handleUserClick} className="navbar-logo-icon">
         <CiUser />
       </a>
