@@ -36,6 +36,11 @@ const Navbar = () => {
         <a href="/plans" className="navbar-a" data-testid="nutrition-link">NUTRITION PLANS</a>
         <a href="/home" className="navbar-a" data-testid="progress-link">PROGRESS TRACKING</a>
         <a href="/about" className="navbar-a" data-testid="about-link">ABOUT</a>
+        <a href="/" className='navbar-a'>CREATE PLANS</a>
+        <a href="/workout-plans" className='navbar-a'>WORKOUT PLANS</a>
+        <a href="/plans" className='navbar-a'>NUTRITION PLANS</a>
+        <a href="/" className='navbar-a'>PROGRESS TRACKING</a>
+        <a href="/about" className='navbar-a'>ABOUT</a>
       </div>
 
       {/* Spacer for layout */}
@@ -65,6 +70,10 @@ const Navbar = () => {
       >
         <CiUser />
       </button>
+      <a href="/"><IoIosNotificationsOutline className='navbar-logo-icon' /></a>
+      <a onClick={handleUserClick} className="navbar-logo-icon">
+        <CiUser />
+      </a>
     </nav>
   );
 };

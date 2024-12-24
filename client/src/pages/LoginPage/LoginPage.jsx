@@ -7,6 +7,7 @@ import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 //import { GoogleLogin } from '@react-oauth/google';
+import Navbar from "../../Components/Navbar/Navbar";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -29,36 +30,6 @@ const LoginPage = () => {
         const { name, value } = e.target;
         setFormData((state) => ({ ...state, [name]: value }));
     };
-
-    // const handleGoogleSuccess = async (credentialResponse) => {
-    //     try {
-    //         const { credential } = credentialResponse;
-
-    //         // Gửi token Google đến backend để xử lý
-    //         const response = await axios.post('http://localhost:5000/api/auth/google-login', {
-    //             token: credential,
-    //         });
-
-    //         // Xử lý dữ liệu trả về từ backend
-    //         const { token: jwtToken, user } = response.data;
-
-    //         // Lưu thông tin vào localStorage
-    //         localStorage.setItem('token', jwtToken);
-    //         localStorage.setItem('user', JSON.stringify(user));
-
-    //         toast.success("Google login successful!");
-
-    //         // Điều hướng đến trang chủ hoặc nơi cần thiết
-    //         navigate('/home');
-    //     } catch (error) {
-    //         const data = error?.response?.data;
-    //         toast.error(data?.message || "Google login failed. Please try again.");
-    //     }
-    // };
-
-    // const handleGoogleError = () => {
-    //     toast.error("Google login failed. Please try again.");
-    // };
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -119,7 +90,7 @@ const LoginPage = () => {
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
-                        <Components.Retitle href='#'>or use your Phone number/Email for registration</Components.Retitle>
+                        <Components.Retitle href='#'>or use your Email for registration</Components.Retitle>
                         <Components.Input
                             type='text'
                             placeholder='Name'
@@ -128,7 +99,7 @@ const LoginPage = () => {
                         />
                         <Components.Input
                             type='email'
-                            placeholder='Phone number or Email'
+                            placeholder='Email'
                             name='email'
                             onChange={handleInputChange}
                         />
@@ -151,7 +122,7 @@ const LoginPage = () => {
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
-                        <Components.Retitle href='#'>or use your Phone number/Email and password</Components.Retitle>
+                        <Components.Retitle href='#'>or use your Email and password</Components.Retitle>
                         <Components.Input
                             type='email'
                             placeholder='Email'

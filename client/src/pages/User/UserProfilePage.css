@@ -28,7 +28,7 @@
 
 .profile-card p {
   font-size: 16px;
-  margin: 10px 0;
+
   color: #555;
 }
 
@@ -56,9 +56,9 @@
 .profile-buttons {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
+  margin-top: 20px;
 }
-
+.logout-btn,
 .edit-btn,
 .save-btn,
 .cancel-btn {
@@ -72,6 +72,11 @@
 
 .edit-btn {
   background-color: #007bff;
+  color: white;
+}
+
+.logout-btn{
+  background-color: #f44d34;
   color: white;
 }
 
@@ -93,8 +98,27 @@
   color: white;
 }
 
-.cancel-btn:hover {
+.logout-btn:hover ,.cancel-btn:hover {
   background-color: #b21f2d;
+}
+.buttonstyle{
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+}
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; 
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; 
+  object-fit: cover; 
+  border: 3px solid #ddd;
 }
 
 /* Responsive adjustments */
