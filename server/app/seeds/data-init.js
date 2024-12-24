@@ -6,9 +6,11 @@ const User = require('../models/User');
 const WeeklyMealPlan = require('../models/WeeklyMealPlan');
 const WeeklyWorkoutPlan = require('../models/WeeklyWorkoutPlan');
 const Workout = require('../models/Workout');
+require('dotenv').config();
 
 mongoose
   .connect('mongodb+srv://bachtran:noname@cluster0.pgvoakh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+    dbName: "SmartFit-Yoga",
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

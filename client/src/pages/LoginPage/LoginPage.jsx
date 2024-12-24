@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as Components from './LoginPageStyles';
-import { FaFacebookF, FaGoogle } from 'react-icons/fa';
+import { FaGooglePlusG, FaFacebookF } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-//import { GoogleLogin } from '@react-oauth/google';
 import Navbar from "../../Components/Navbar/Navbar";
 
 const LoginPage = () => {
@@ -34,14 +33,9 @@ const LoginPage = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         const { name, email, password, } = formData;
-
+    
         try {
             const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
-            const { token, user } = response.data;
-
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(user));
-
             if (response.status === 201) {
                 toast.success("Account created successfully!");
                 toggle(true); // Chuyển sang giao diện Sign In sau khi đăng ký thành công
@@ -86,11 +80,11 @@ const LoginPage = () => {
                     <Components.Form onSubmit={handleSubmit}>
                         <Components.Title1>Create Account</Components.Title1>
                         <Components.SocialButtons>
-                            <Components.SocialButton><FaGoogle /></Components.SocialButton>
+                            <Components.SocialButton><FaGooglePlusG /></Components.SocialButton>
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
-                        <Components.Retitle href='#'>or use your Email for registration</Components.Retitle>
+                        <Components.Retitle href='#'>or use your Phone number/Email for registration</Components.Retitle>
                         <Components.Input
                             type='text'
                             placeholder='Name'
@@ -99,7 +93,7 @@ const LoginPage = () => {
                         />
                         <Components.Input
                             type='email'
-                            placeholder='Email'
+                            placeholder='Phone number or Email'
                             name='email'
                             onChange={handleInputChange}
                         />
@@ -118,11 +112,11 @@ const LoginPage = () => {
                     <Components.Form onSubmit={handleSubmit}>
                         <Components.Title1>Sign In</Components.Title1>
                         <Components.SocialButtons>
-                            <Components.SocialButton><FaGoogle /></Components.SocialButton>
+                            <Components.SocialButton><FaGooglePlusG /></Components.SocialButton>
                             <Components.SocialButton><FaFacebookF /></Components.SocialButton>
                             <Components.SocialButton><FaXTwitter /></Components.SocialButton>
                         </Components.SocialButtons>
-                        <Components.Retitle href='#'>or use your Email and password</Components.Retitle>
+                        <Components.Retitle href='#'>or use your Phone number/Email and password</Components.Retitle>
                         <Components.Input
                             type='email'
                             placeholder='Email'
