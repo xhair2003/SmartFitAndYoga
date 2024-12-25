@@ -6,7 +6,6 @@ import { MdManageAccounts } from 'react-icons/md';
 import { PiNotificationBold } from 'react-icons/pi';
 import { LiaToolsSolid } from 'react-icons/lia';
 import { GoShieldLock } from 'react-icons/go';
-import { FaRegQuestionCircle } from 'react-icons/fa';
 import { RiLogoutBoxLine } from "react-icons/ri";
 
 

@@ -11,4 +11,5 @@ router.post('/', authMiddleware, createWeeklyMealPlan);
 
 router.get('/my', authMiddleware, getMyWeeklyMealPlan);
 
+
 module.exports = router;

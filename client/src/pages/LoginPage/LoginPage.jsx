@@ -6,7 +6,6 @@ import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import Navbar from "../../Components/Navbar/Navbar";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -33,7 +32,7 @@ const LoginPage = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         const { name, email, password, } = formData;
-    
+
         try {
             const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
             if (response.status === 201) {

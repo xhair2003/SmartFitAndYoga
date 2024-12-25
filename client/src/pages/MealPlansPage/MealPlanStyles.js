@@ -223,4 +223,7 @@ export const Loading = styled.div`
   margin-top: 2rem;
   color: #666;
 `;
-
+export const RecipeLink = styled.a`
+  color: #00ff00;
+  text-decoration: none;
+`;

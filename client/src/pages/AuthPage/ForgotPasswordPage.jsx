@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as Components from './AuthStyles';
 import { useNavigate } from "react-router-dom";
+import { FiMail } from 'react-icons/fi';
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -14,22 +15,39 @@ const ForgotPasswordPage = () => {
 
   return (
     <Components.Container>
-      <Components.Title>Forgot your password</Components.Title>
-      <Components.Subtitle>Enter your registered email we will send a 6-digit OTP</Components.Subtitle>
-        <Components.ItemContainer>
-          Email *
-          <Components.Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="enter your email"
-            required
-          />
-        </Components.ItemContainer>
-        <Components.Button onClick={submitHandler}>Send OTP</Components.Button>
-      <Components.Link href="/login">Back to login</Components.Link>
+      <Components.FormContainer>
+        <Components.Title>Forgot Password?</Components.Title>
+        <Components.Subtitle>
+          Enter your email and we'll send you a 6-digit code to reset password.
+        </Components.Subtitle>
+        <form onSubmit={submitHandler}>
+          <Components.ItemContainer>
+            <Components.Label htmlFor="email">Email Address</Components.Label>
+            <div style={{ position: 'relative' }}>
+              <Components.Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+              <FiMail style={{
+                position: 'absolute',
+                right: '1rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#a0aec0'
+              }} />
+            </div>
+          </Components.ItemContainer>
+          <Components.Button type="submit">Send Reset Link</Components.Button>
+        </form>
+        <Components.Link href="/login">Back to Login</Components.Link>
+      </Components.FormContainer>
     </Components.Container>
   );
 };
 
 export default ForgotPasswordPage;
+

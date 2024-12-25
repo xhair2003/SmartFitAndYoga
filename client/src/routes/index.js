@@ -51,17 +51,24 @@ export const routes = [
         path: '/loading',
         page: LoadingPage,
     },
+    // {   
+    //     id: 8,
+    //     path: '/complete',
+    //     page: CompletePage,
+    // },
     {   
-        id: 8,
+        id: 9,
         path: '/home',
         page: HomePage,
     },
     {   
-        id: 9,
+        id: 10,
         path: '/about',
         page: AboutPage,
     },
     {   
+        // id: 11,
+        // path: '/plans',
         id: 10,
         path: '/meal-plans',
         page: MealPlanPage,

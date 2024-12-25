@@ -1,5 +1,7 @@
 const User = require('../models/User');
+const { sendEmail } = require('../services/emailService');
 const { generateToken } = require('../services/jwtService');
+const resetPasswordTemplate = require('../template/templateMail');
 
 const register = async (req, res) => {
   try {
@@ -42,28 +44,50 @@ const login = async (req, res) => {
   }
 };
 
-const changePassword = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const { password, newPassword } = req.body;
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Incorrect current password.' });
-    }
-
-    user.password = await bcrypt.hash(newPassword, 10);
-    await user.save();
-
-    res.json({ message: 'Password updated successfully.' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+const requestPasswordReset = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error('No user found with this email.');
   }
+
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const resetTokenHash = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  user.resetPasswordToken = resetTokenHash;
+  user.resetPasswordExpiresAt = Date.now() + 3600 * 1000;
+  await user.save();
+
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+  await sendEmail({
+    to: user.email,
+    subject: 'Password Reset Request',
+    html: resetPasswordTemplate(user.name, resetLink),
+  });
+
+  return resetLink;
+};
+const resetPassword = async (token, newPassword) => {
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+  const user = await User.findOne({
+    resetPasswordToken: tokenHash,
+    resetPasswordExpiresAt: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    throw new Error('Invalid or expired reset token.');
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpiresAt = undefined;
+  await user.save();
+
+  return user;
 };
 
-module.exports = { register, login, changePassword };
+module.exports = { register, login, requestPasswordReset, resetPassword };
