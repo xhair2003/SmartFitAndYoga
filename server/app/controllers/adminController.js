@@ -88,27 +88,53 @@ const addUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
+    // Kiểm tra xem các trường cần thiết có tồn tại không
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email, and password are required.' });
     }
 
-    if (await User.findOne({ email })) {
-      return res.status(400).json({ message: 'Email already exists.' });
+    // Kiểm tra định dạng email hợp lệ
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Invalid email format.' });
     }
 
-    // Băm mật khẩu trước khi lưu
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Kiểm tra xem email đã tồn tại chưa
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already exists.' });
+    }
 
-    const user = new User({ name, email, password: hashedPassword, role });
+    // Kiểm tra độ dài mật khẩu
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long.' });
+    }
+
+    // Kiểm tra role hợp lệ nếu có
+    const validRoles = ['User', 'Admin'];
+    if (role && !validRoles.includes(role)) {
+      return res.status(400).json({ message: 'Invalid role.' });
+    }
+
+    // Tạo mới user
+    const user = new User({ name: name.trim(), email, password, role: role || 'User' });
     await user.save();
 
+    // Trả về phản hồi thành công
     res.status(201).json({
       message: 'User added successfully.',
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
+    // Xử lý lỗi máy chủ
     res.status(500).json({ error: error.message });
   }
 };
-//
+
+
 module.exports = { getAllUsers, deleteUser, updateUser,  addUser };
