@@ -29,67 +29,59 @@ const deleteUser = async (req, res) => {
 };
 
 //
-const updateNameUser = async (req, res) => {
+const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, role } = req.body;
 
-    // Kiểm tra dữ liệu hợp lệ
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
-      return res.status(400).json({ message: 'Invalid name.' });
+    // Object để chứa các trường cần cập nhật
+    const updateFields = {};
+
+    // Kiểm tra và thêm trường name nếu có
+    if (name) {
+      if (typeof name !== 'string' || name.trim().length === 0) {
+        return res.status(400).json({ message: 'Invalid name.' });
+      }
+
+      // Kiểm tra xem tên đã được sử dụng bởi user khác hay chưa
+      const existingUser = await User.findOne({ name: name.trim(), _id: { $ne: id } });
+      if (existingUser) {
+        return res.status(409).json({ message: 'Name already exists.' });
+      }
+
+      updateFields.name = name.trim(); // Loại bỏ khoảng trắng thừa
     }
 
-    // Kiểm tra xem tên đã được sử dụng bởi user khác hay chưa
-    const existingUser = await User.findOne({ name: name.trim(), _id: { $ne: id } });
-    if (existingUser) {
-      return res.status(409).json({ message: 'Name already exists.' }); // HTTP 409 Conflict
+    // Kiểm tra và thêm trường role nếu có
+    if (role) {
+      const validRoles = ['User', 'Admin'];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ message: 'Invalid role.' });
+      }
+
+      updateFields.role = role;
     }
 
-    // Cập nhật tên người dùng
+    // Nếu không có trường nào cần cập nhật
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: 'No valid fields to update.' });
+    }
+
+    // Cập nhật người dùng
     const user = await User.findByIdAndUpdate(
       id,
-      { name: name.trim() }, // Loại bỏ khoảng trắng thừa
-      { new: true, runValidators: true } // Trả về document đã cập nhật
+      updateFields,
+      { new: true, runValidators: true } // Trả về document đã cập nhật và chạy validator
     ).select('-password'); // Loại bỏ trường password khỏi kết quả
 
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    res.json({ message: 'Name updated successfully.', user });
+    res.json({ message: 'User details updated successfully.', user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-
-//
-const updateRoleUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { role } = req.body; // Role mới được gửi từ client
-
-    // Kiểm tra role hợp lệ (nếu cần)
-    const validRoles = ['User', 'Admin'];
-    if (!validRoles.includes(role)) {
-      return res.status(400).json({ message: 'Invalid role.' });
-    }
-
-    const user = await User.findByIdAndUpdate(
-      id,
-      { role },
-      { new: true, runValidators: true }
-    ).select('-password');
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
-    res.json({ message: 'Role updated successfully.', user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
-module.exports = { getAllUsers, deleteUser, updateRoleUser, updateNameUser };
+module.exports = { getAllUsers, deleteUser, updateUser };
