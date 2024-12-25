@@ -7,26 +7,37 @@ import { PiNotificationBold } from 'react-icons/pi';
 import { LiaToolsSolid } from 'react-icons/lia';
 import { GoShieldLock } from 'react-icons/go';
 import { FaRegQuestionCircle } from 'react-icons/fa';
+import { BiLogOut } from 'react-icons/bi';
 
 const AdminNavbar = ({ onToggle, onMenuSelect }) => {
     const [isHidden, setIsHidden] = useState(false);
 
-    // Đóng hoặc mở navbar
+    // Toggle navbar visibility
     const toggleNavbar = () => {
         const newState = !isHidden;
         setIsHidden(newState);
-        onToggle(newState); // Gửi trạng thái lên parent component
+        onToggle(newState); // Notify parent component
     };
 
-    // Hiện lại navbar
+    // Show navbar
     const showNavbar = () => {
         setIsHidden(false);
         onToggle(false);
     };
 
+    // Handle Logout
+    const handleLogout = () => {
+        // Remove token from localStorage or sessionStorage
+        localStorage.removeItem('token'); // Adjust key based on your implementation
+        sessionStorage.removeItem('token'); // Optional if you use sessionStorage
+
+        // Redirect to login page
+        window.location.href = '/login';
+    };
+
     return (
         <div>
-            {/* Nút mở lại navbar khi navbar bị ẩn */}
+            {/* Button to reopen navbar when hidden */}
             {isHidden && (
                 <button className="admin-show-button" onClick={showNavbar}>
                     <IoMdMenu />
@@ -48,7 +59,7 @@ const AdminNavbar = ({ onToggle, onMenuSelect }) => {
                     <img src="./img3.jpg" alt="Avatar" className="avatar-image" />
                 </div>
 
-                {/* Tên và Role */}
+                {/* Name and Role */}
                 <div className="admin-name-role">
                     <span className="admin-name">John Doe</span>
                     <span className="admin-role">Administrator</span>
@@ -84,6 +95,12 @@ const AdminNavbar = ({ onToggle, onMenuSelect }) => {
                 <div className="admin-dashboard-button" onClick={() => onMenuSelect('faq')}>
                     <span className="dashboard-icon"><FaRegQuestionCircle /></span>
                     <span className="dashboard-icon-function">FAQ</span>
+                </div>
+
+                <span className="dashboard-title">LOGOUT</span>
+                <div className="admin-dashboard-button" onClick={handleLogout}>
+                    <span className="dashboard-icon"><BiLogOut /></span>
+                    <span className="dashboard-icon-function">Logout</span>
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { CiUser } from "react-icons/ci";
 import { CiSearch } from "react-icons/ci";
-//import Notification from "../Notification/Notification";
+import Notification from "../Notification/Notification";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -49,11 +49,11 @@ const Navbar = () => {
         <input type="text" className="navbar-search" placeholder="Search..." />
       </div>
       {/* Dropdown Notification */}
-      {/* <Notification/> */}
+      <Notification/>
       {/* User Icon */}
-      <a onClick={handleUserClick} className="navbar-logo-icon">
+      <button onClick={handleUserClick} className="navbar-logo-icon">
         <CiUser />
-      </a>
+      </button>
     </nav>
   );
 };

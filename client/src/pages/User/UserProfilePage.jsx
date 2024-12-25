@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./UserProfilePage.css";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
 
-// Dữ liệu người dùng (mẫu)
 const initialUser = {
   id: 1,
   name: "John Doe",
@@ -13,7 +13,7 @@ const initialUser = {
   weight: 70.5,
   height: 175.3,
   role: "user",
-  gender: "male", // Thêm giới tính (male hoặc female)
+  gender: "male",
   created_at: "2023-01-01 12:00:00",
   updated_at: "2023-01-01 12:00:00",
 };
@@ -21,20 +21,22 @@ const initialUser = {
 const UserProfilePage = () => {
   const [user, setUser] = useState(initialUser);
   const [formData, setFormData] = useState(initialUser);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleEdit = () => {
-    setIsModalOpen(true); // Open the modal
+    setIsModalOpen(true);
   };
 
   const handleSave = () => {
     setUser({ ...formData, updated_at: new Date().toISOString() });
-    setIsModalOpen(false); // Close the modal after saving
+    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setFormData(user);
-    setIsModalOpen(false); // Close the modal without saving
+    setIsModalOpen(false);
   };
 
   const handleChange = (e) => {
@@ -42,8 +44,9 @@ const UserProfilePage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
   };
 
   return (
@@ -53,15 +56,14 @@ const UserProfilePage = () => {
         <h1>PROFILE</h1>
       </div>
       <div className="profile-container">
-
         <div className="profile-card">
-        <div className="avatar-container">
-          <img
-            src={user.gender === "male" ? "./man.png" : "./woman.png"}
-            alt="User Avatar"
-            className="avatar"
-          />
-        </div>
+          <div className="avatar-container">
+            <img
+              src={user.gender === "male" ? "./man.png" : "./woman.png"}
+              alt="User Avatar"
+              className="avatar"
+            />
+          </div>
           <p>
             <strong>Name:</strong> {user.name}
           </p>
@@ -90,19 +92,18 @@ const UserProfilePage = () => {
             <strong>Updated At:</strong> {user.updated_at}
           </p>
           <div className="buttonstyle">
-              <button className="edit-btn" onClick={handleEdit}>
-                Edit
-              </button>
-              <button className="logout-btn" >
-                Logout
-              </button>
+            <button className="edit-btn" onClick={handleEdit}>
+              Edit
+            </button>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Modal for editing user profile */}
       {isModalOpen && (
-        <Modal onClose={handleCloseModal}>
+        <Modal onClose={() => setIsModalOpen(false)}>
           <div className="profile-field">
             <label>Name:</label>
             <input
@@ -119,7 +120,6 @@ const UserProfilePage = () => {
               <option value="female">Female</option>
             </select>
           </div>
-
           <div className="profile-field">
             <label>Email:</label>
             <input
@@ -172,7 +172,6 @@ const UserProfilePage = () => {
   );
 };
 
-// Modal component
 const Modal = ({ onClose, children }) => (
   <div className="modal">
     <div className="modal-content">

@@ -77,9 +77,14 @@
     color: var(--text-color);
     margin-right: 25px;
     transition: transform 0.3s ease-in-out;
+    border: none; /* Removes any border */
+    background-color: transparent; /* Ensures no background */
+    box-shadow: none; /* Removes any box shadow */
+    padding: 0; /* Optional: Removes inner spacing */
 }
 
 .navbar-logo-icon:hover {
+    outline: none;
     transform: scale(1.5);
 }
 
@@ -102,6 +107,7 @@
 
 .navbar-search:focus {
     border-color: #888;
+    outline: none;
 }
 
 .navbar-search-icon {

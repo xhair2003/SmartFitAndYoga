@@ -31,6 +31,7 @@ const AdminDashPage = () => {
         return <div><h2>Security</h2><p>Configure security settings.</p></div>;
       case 'faq':
         return <div><h2>FAQ</h2><p>Frequently Asked Questions.</p></div>;
+      
       default:
         return <Dashboard/>;
     }

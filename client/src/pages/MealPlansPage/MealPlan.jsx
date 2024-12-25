@@ -23,7 +23,7 @@ const MealPlanPage = () => {
         // Lấy token từ localStorage
         const token = localStorage.getItem('token');
         if (!token) {
-          throw new Error('Token is missing. Please log in again.');
+          throw new Error('Please login to use this function');
         }
 
         const response = await axios.get('http://localhost:5000/api/meal-plans/my', {

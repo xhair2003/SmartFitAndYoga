@@ -6,7 +6,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import Navbar from "../../Components/Navbar/Navbar";
+//import Navbar from "../../Components/Navbar/Navbar";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const LoginPage = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         const { name, email, password, } = formData;
-    
+
         try {
             const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
             if (response.status === 201) {
@@ -57,7 +57,11 @@ const LoginPage = () => {
             localStorage.setItem('user', JSON.stringify(user));
 
             toast.success("Login successful!");
-            navigate('/home');
+            if (user.role === 'Admin') {
+                navigate('/admin-dashboard'); // Điều hướng đến admin dashboard
+            } else {
+                navigate('/home'); // Điều hướng đến trang home cho người dùng thông thường
+            }
         } catch (error) {
             toast.error("Login failed. Please check your credentials.");
         }
@@ -72,7 +76,7 @@ const LoginPage = () => {
     };
 
     return (
-        
+
         <Components.Background>
             <Components.Container>
                 {/* Sign Up Container */}

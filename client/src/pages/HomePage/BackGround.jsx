@@ -27,10 +27,10 @@ const BackGround = () => {
         <video ref={videoRef} className="background fade-in" autoPlay loop muted>
           <source src= "/video_bg3.mp4" type="video/mp4" />
         </video>
-        <img src="/slogan.png" className="centered-image"/>
+        <img src="/slogan.png" className="centered-image" alt="Slogan"/>
         <div className="button-container">
-          <button1 onClick={() => navigate('/path1')}>WORKOUT PLAN</button1>
-          <button2 onClick={() => navigate('/path2')}>NUTRITION PLAN</button2>
+          <button1 onClick={() => navigate('/workout-plans')}>WORKOUT PLAN</button1>
+          <button2 onClick={() => navigate('/meal-plans')}>NUTRITION PLAN</button2>
         </div>
         {isPlaying ? (
           <FaPause className="button-fa" onClick={handlePause} />
