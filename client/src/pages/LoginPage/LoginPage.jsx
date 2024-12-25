@@ -57,7 +57,11 @@ const LoginPage = () => {
             localStorage.setItem('user', JSON.stringify(user));
 
             toast.success("Login successful!");
-            navigate('/home');
+            if (user.role === 'Admin') {
+                navigate('/admin-dashboard'); // Chuyển hướng đến trang quản trị
+            } else {
+                navigate('/home'); // Chuyển hướng đến trang chính
+            }
         } catch (error) {
             toast.error("Login failed. Please check your credentials.");
         }
@@ -142,7 +146,6 @@ const LoginPage = () => {
                             <Components.Paragraph>Enter your personal details to use all site features</Components.Paragraph>
                             <Components.GhostButton onClick={() => toggle(true)}>Sign In</Components.GhostButton>
                         </Components.LeftOverlayPanel>
-
                         <Components.RightOverlayPanel signinIn={signIn}>
                             <Components.Title2>Hello, Friend!</Components.Title2>
                             <Components.Paragraph>Register to use all site features</Components.Paragraph>

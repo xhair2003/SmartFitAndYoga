@@ -7,6 +7,8 @@ import { PiNotificationBold } from 'react-icons/pi';
 import { LiaToolsSolid } from 'react-icons/lia';
 import { GoShieldLock } from 'react-icons/go';
 import { FaRegQuestionCircle } from 'react-icons/fa';
+import { RiLogoutBoxLine } from "react-icons/ri";
+
 
 const AdminNavbar = ({ onToggle, onMenuSelect }) => {
     const [isHidden, setIsHidden] = useState(false);
@@ -80,11 +82,12 @@ const AdminNavbar = ({ onToggle, onMenuSelect }) => {
                     <span className="dashboard-icon-function">Security</span>
                 </div>
 
-                <span className="dashboard-title">FAQ</span>
-                <div className="admin-dashboard-button" onClick={() => onMenuSelect('faq')}>
-                    <span className="dashboard-icon"><FaRegQuestionCircle /></span>
-                    <span className="dashboard-icon-function">FAQ</span>
+                <span className="dashboard-title">Logout</span>
+                <div className="admin-dashboard-button">
+                    <span className="dashboard-icon"><RiLogoutBoxLine /></span>
+                    <span className="dashboard-icon-function">Logout</span>
                 </div>
+
             </div>
         </div>
     );
