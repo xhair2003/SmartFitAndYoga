@@ -7,9 +7,15 @@
 }
 
 .manage-user-container h2 {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-size: 24px;
   color: #333;
+}
+.manage-user-container h3 {
+  font-size: 20px;
+  color: #333;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .manage-user-container p {
@@ -203,3 +209,63 @@
   background-color: #5a6268;
 }
 
+.add-user-button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.add-user-button:hover {
+  background-color: #218838;
+}
+
+.add-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-user-form label {
+  font-size: 14px;
+  color: #333;
+}
+
+.add-user-form input,
+.add-user-form select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.add-user-form .submit-button {
+  margin-top: 10px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.add-user-form .cancel-button{
+  margin-top: 10px;
+  background-color: #5e5e5e;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-start;
+}

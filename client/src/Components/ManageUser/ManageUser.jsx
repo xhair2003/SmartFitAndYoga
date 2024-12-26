@@ -8,11 +8,15 @@ const ManageUser = () => {
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState("");
   const [editUser, setEditUser] = useState(null);
-  const [updatedUser, setUpdatedUser] = useState({
+  const [updatedUser, setUpdatedUser] = useState({ name: "", role: "" });
+  const [confirmDelete, setConfirmDelete] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newUser, setNewUser] = useState({
     name: "",
+    email: "",
+    password: "",
     role: "",
   });
-  const [confirmDelete, setConfirmDelete] = useState(null); // Lưu user đang được xác nhận xóa
 
   const API_BASE_URL = "http://localhost:5000/api/admin/users";
 
@@ -48,12 +52,45 @@ const ManageUser = () => {
     }
   };
 
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const token = getToken();
+      if (!token) throw new Error("Token not found. Please log in.");
+
+      const response = await fetch(`${API_BASE_URL}/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      if (!response.ok) throw new Error("Failed to add user.");
+
+      // Làm mới danh sách người dùng từ API
+      await fetchUsers();
+
+      setShowAddForm(false);
+      showNotification("User added successfully.");
+      setNewUser({ name: "", email: "", password: "", role: "" });
+    } catch (error) {
+      console.error("Error adding user:", error);
+      showNotification("Failed to add user.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleEditClick = (user) => {
     setEditUser(user);
     setUpdatedUser({
       name: user.name,
       role: user.role,
     });
+    setShowAddForm(false); // Ẩn nút Add khi edit
   };
 
   const saveEdit = async (e) => {
@@ -77,12 +114,9 @@ const ManageUser = () => {
 
       if (!response.ok) throw new Error("Failed to update user.");
 
-      const updatedData = await response.json();
-      setUsers(
-        users.map((user) =>
-          user._id === updatedData.user._id ? updatedData.user : user
-        )
-      );
+      // Làm mới danh sách người dùng từ API
+      await fetchUsers();
+
       setEditUser(null);
       showNotification("User updated successfully.");
     } catch (error) {
@@ -98,7 +132,8 @@ const ManageUser = () => {
   };
 
   const handleDeleteClick = (user) => {
-    setConfirmDelete(user); // Hiển thị xác nhận xóa với user được chọn
+    setConfirmDelete(user);
+    setShowAddForm(false); // Ẩn nút Add khi delete
   };
 
   const deleteUser = async () => {
@@ -117,7 +152,9 @@ const ManageUser = () => {
 
       if (!response.ok) throw new Error("Failed to delete user.");
 
-      setUsers(users.filter((user) => user._id !== confirmDelete._id));
+      // Làm mới danh sách người dùng từ API
+      await fetchUsers();
+
       setConfirmDelete(null);
       showNotification("User deleted successfully.");
     } catch (error) {
@@ -135,15 +172,16 @@ const ManageUser = () => {
   return (
     <div className="manage-user-container">
       <h2>Manage Users</h2>
-      <p>View, edit, and manage users.</p>
+      <p>View, add, edit, and manage users.</p>
 
       {notification && <div className="notification">{notification}</div>}
       {loading && <div className="loading">Loading...</div>}
 
+      {/* Xác nhận xóa */}
       {confirmDelete && (
         <div className="confirm-delete">
-          <p >Are you sure you want to delete user:</p>
-          <strong >{confirmDelete.name}</strong>
+          <p>Are you sure you want to delete user:</p>
+          <strong>{confirmDelete.name}</strong>
           <div className="paccept">
             <button onClick={deleteUser} className="delete-confirm-button">
               Yes, Delete
@@ -158,6 +196,7 @@ const ManageUser = () => {
         </div>
       )}
 
+      {/* Form chỉnh sửa người dùng */}
       {editUser && (
         <form className="edit-user-form" onSubmit={saveEdit}>
           <h3>Edit User</h3>
@@ -191,13 +230,90 @@ const ManageUser = () => {
           <button
             type="button"
             className="cancel-button"
-            onClick={cancelEdit}
+            onClick={() => {
+              setEditUser(null);
+              setShowAddForm(false);
+            }}
           >
             Cancel
           </button>
         </form>
       )}
 
+      {/* Form thêm người dùng */}
+      {showAddForm && (
+        <form className="add-user-form" onSubmit={handleAddUser}>
+          <h3>Add New User</h3>
+          <div>
+            <label>Name:</label>
+            <input
+              type="text"
+              value={newUser.name}
+              onChange={(e) =>
+                setNewUser({ ...newUser, name: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={newUser.email}
+              onChange={(e) =>
+                setNewUser({ ...newUser, email: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={newUser.password}
+              onChange={(e) =>
+                setNewUser({ ...newUser, password: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label>Role:</label>
+            <select
+              value={newUser.role}
+              onChange={(e) =>
+                setNewUser({ ...newUser, role: e.target.value })
+              }
+              required
+            >
+              <option value="">Select Role</option>
+              <option value="Admin">Admin</option>
+              <option value="User">User</option>
+            </select>
+          </div>
+          <button type="submit" className="submit-button">
+            Add User
+          </button>
+          <button
+            type="button"
+            className="cancel-button"
+            onClick={() => setShowAddForm(false)}
+          >
+            Cancel
+          </button>
+        </form>
+      )}
+
+      {!showAddForm && !editUser && !confirmDelete && (
+        <button
+          className="add-user-button"
+          onClick={() => setShowAddForm(true)}
+        >
+          Add New User
+        </button>
+      )}
+
+      {/* Bảng danh sách người dùng */}
       <table className="user-table">
         <thead>
           <tr>
@@ -215,7 +331,7 @@ const ManageUser = () => {
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
-              <td className="grbutton">
+              <td>
                 <button
                   className="edit-button"
                   onClick={() => handleEditClick(user)}
