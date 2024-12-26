@@ -9,8 +9,8 @@ const limiter = rateLimit({
 
 // Authentication-specific rate limiter
 const limiterAuth = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 5, // Maximum 5 requests per IP
+  windowMs: 1 * 60 * 1000, // 1 minutes
+  max: 10, // Maximum 10 requests per IP
   message: 'Too many requests from this IP, please try again after 60s.',
 });
 
