@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "./ManageUser.css";
+import { BiSolidEdit } from "react-icons/bi";
+import { AiFillDelete } from "react-icons/ai";
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newUser, setNewUser] = useState({ name: "", email: "", role: "" });
-  const [editUser, setEditUser] = useState(null);
-  const [notification, setNotification] = useState("");
-  const [confirmDelete, setConfirmDelete] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState("");
+  const [editUser, setEditUser] = useState(null);
+  const [updatedUser, setUpdatedUser] = useState({
+    name: "",
+    role: "",
+  });
+  const [confirmDelete, setConfirmDelete] = useState(null); // Lưu user đang được xác nhận xóa
 
   const API_BASE_URL = "http://localhost:5000/api/admin/users";
 
@@ -44,59 +48,12 @@ const ManageUser = () => {
     }
   };
 
-  const deleteUser = async (id) => {
-    try {
-      setLoading(true);
-      const token = getToken();
-      if (!token) throw new Error("Token not found. Please log in.");
-
-      const response = await fetch(`${API_BASE_URL}/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error("Failed to delete user.");
-
-      setUsers(users.filter((user) => user.id !== id));
-      setConfirmDelete(null);
-      showNotification("User deleted successfully.");
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      showNotification("Failed to delete user.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addUser = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const token = getToken();
-      if (!token) throw new Error("Token not found. Please log in.");
-
-      const response = await fetch(API_BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(newUser),
-      });
-      if (!response.ok) throw new Error("Failed to add user.");
-
-      const addedUser = await response.json();
-      setUsers([...users, addedUser]);
-      toggleAddForm();
-      showNotification("User added successfully.");
-    } catch (error) {
-      console.error("Error adding user:", error);
-      showNotification("Failed to add user.");
-    } finally {
-      setLoading(false);
-    }
+  const handleEditClick = (user) => {
+    setEditUser(user);
+    setUpdatedUser({
+      name: user.name,
+      role: user.role,
+    });
   };
 
   const saveEdit = async (e) => {
@@ -106,22 +63,25 @@ const ManageUser = () => {
       const token = getToken();
       if (!token) throw new Error("Token not found. Please log in.");
 
-      const response = await fetch(`${API_BASE_URL}/${editUser.id}`, {
-        method: "PUT",
+      const response = await fetch(`${API_BASE_URL}/${editUser._id}/update`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          name: editUser.name,
-          role: editUser.role,
+          name: updatedUser.name,
+          role: updatedUser.role,
         }),
       });
+
       if (!response.ok) throw new Error("Failed to update user.");
 
-      const updatedUser = await response.json();
+      const updatedData = await response.json();
       setUsers(
-        users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+        users.map((user) =>
+          user._id === updatedData.user._id ? updatedData.user : user
+        )
       );
       setEditUser(null);
       showNotification("User updated successfully.");
@@ -133,12 +93,40 @@ const ManageUser = () => {
     }
   };
 
-  const toggleAddForm = () => {
-    setShowAddForm(!showAddForm);
-    setNewUser({ name: "", email: "", role: "" });
+  const cancelEdit = () => {
+    setEditUser(null);
   };
 
-  const cancelEdit = () => setEditUser(null);
+  const handleDeleteClick = (user) => {
+    setConfirmDelete(user); // Hiển thị xác nhận xóa với user được chọn
+  };
+
+  const deleteUser = async () => {
+    try {
+      setLoading(true);
+      const token = getToken();
+      if (!token) throw new Error("Token not found. Please log in.");
+
+      const response = await fetch(`${API_BASE_URL}/${confirmDelete._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to delete user.");
+
+      setUsers(users.filter((user) => user._id !== confirmDelete._id));
+      setConfirmDelete(null);
+      showNotification("User deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      showNotification("Failed to delete user.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -147,67 +135,27 @@ const ManageUser = () => {
   return (
     <div className="manage-user-container">
       <h2>Manage Users</h2>
-      <p>View, edit, and manage all registered users.</p>
+      <p>View, edit, and manage users.</p>
 
       {notification && <div className="notification">{notification}</div>}
-
       {loading && <div className="loading">Loading...</div>}
 
       {confirmDelete && (
         <div className="confirm-delete">
-          <p>Are you sure you want to delete:</p>
-          <p>
-            <strong>{users.find((user) => user.id === confirmDelete)?.name}</strong>
-          </p>
-          <button onClick={() => deleteUser(confirmDelete)}>Yes</button>
-          <button onClick={() => setConfirmDelete(null)}>No</button>
-        </div>
-      )}
-
-      <button className="add-user-button" onClick={toggleAddForm}>
-        {showAddForm ? "Cancel" : "Add New User"}
-      </button>
-
-      {showAddForm && (
-        <form className="add-user-form" onSubmit={addUser}>
-          <div>
-            <label>Name:</label>
-            <input
-              type="text"
-              value={newUser.name}
-              onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-              required
-            />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              value={newUser.email}
-              onChange={(e) =>
-                setNewUser({ ...newUser, email: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div>
-            <label>Role:</label>
-            <select
-              value={newUser.role}
-              onChange={(e) =>
-                setNewUser({ ...newUser, role: e.target.value })
-              }
-              required
+          <p >Are you sure you want to delete user:</p>
+          <strong >{confirmDelete.name}</strong>
+          <div className="paccept">
+            <button onClick={deleteUser} className="delete-confirm-button">
+              Yes, Delete
+            </button>
+            <button
+              onClick={() => setConfirmDelete(null)}
+              className="delete-cancel-button"
             >
-              <option value="">Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="User">User</option>
-            </select>
+              Cancel
+            </button>
           </div>
-          <button type="submit" className="submit-button">
-            Add User
-          </button>
-        </form>
+        </div>
       )}
 
       {editUser && (
@@ -217,9 +165,9 @@ const ManageUser = () => {
             <label>Name:</label>
             <input
               type="text"
-              value={editUser.name}
+              value={updatedUser.name}
               onChange={(e) =>
-                setEditUser({ ...editUser, name: e.target.value })
+                setUpdatedUser({ ...updatedUser, name: e.target.value })
               }
               required
             />
@@ -227,9 +175,9 @@ const ManageUser = () => {
           <div>
             <label>Role:</label>
             <select
-              value={editUser.role}
+              value={updatedUser.role}
               onChange={(e) =>
-                setEditUser({ ...editUser, role: e.target.value })
+                setUpdatedUser({ ...updatedUser, role: e.target.value })
               }
               required
             >
@@ -240,7 +188,11 @@ const ManageUser = () => {
           <button type="submit" className="submit-button">
             Save Changes
           </button>
-          <button type="button" className="cancel-button" onClick={cancelEdit}>
+          <button
+            type="button"
+            className="cancel-button"
+            onClick={cancelEdit}
+          >
             Cancel
           </button>
         </form>
@@ -258,23 +210,23 @@ const ManageUser = () => {
         </thead>
         <tbody>
           {users.map((user, index) => (
-            <tr key={user.id}>
+            <tr key={user._id}>
               <td>{index + 1}</td>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
-              <td>
+              <td className="grbutton">
                 <button
                   className="edit-button"
-                  onClick={() => setEditUser({ ...user })}
+                  onClick={() => handleEditClick(user)}
                 >
-                  Edit
+                  <BiSolidEdit />
                 </button>
                 <button
                   className="delete-button"
-                  onClick={() => setConfirmDelete(user.id)}
+                  onClick={() => handleDeleteClick(user)}
                 >
-                  Delete
+                  <AiFillDelete />
                 </button>
               </td>
             </tr>
