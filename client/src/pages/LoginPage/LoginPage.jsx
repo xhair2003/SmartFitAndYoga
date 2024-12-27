@@ -6,7 +6,6 @@ import { FaXTwitter } from "react-icons/fa6";
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-//import Navbar from "../../Components/Navbar/Navbar";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -58,9 +57,9 @@ const LoginPage = () => {
 
             toast.success("Login successful!");
             if (user.role === 'Admin') {
-                navigate('/admin-dashboard'); // Điều hướng đến admin dashboard
+                navigate('/admin-dashboard'); // Chuyển hướng đến trang quản trị
             } else {
-                navigate('/home'); // Điều hướng đến trang home cho người dùng thông thường
+                navigate('/home'); // Chuyển hướng đến trang chính
             }
         } catch (error) {
             toast.error("Login failed. Please check your credentials.");
@@ -76,7 +75,7 @@ const LoginPage = () => {
     };
 
     return (
-
+        
         <Components.Background>
             <Components.Container>
                 {/* Sign Up Container */}
@@ -146,7 +145,6 @@ const LoginPage = () => {
                             <Components.Paragraph>Enter your personal details to use all site features</Components.Paragraph>
                             <Components.GhostButton onClick={() => toggle(true)}>Sign In</Components.GhostButton>
                         </Components.LeftOverlayPanel>
-
                         <Components.RightOverlayPanel signinIn={signIn}>
                             <Components.Title2>Hello, Friend!</Components.Title2>
                             <Components.Paragraph>Register to use all site features</Components.Paragraph>

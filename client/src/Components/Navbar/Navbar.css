@@ -47,7 +47,6 @@
     padding: 10px 15px;
     text-decoration: none;
     font-size: 16px;
-    font-weight: 600;
     border-radius: 5px;
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
@@ -77,10 +76,8 @@
     color: var(--text-color);
     margin-right: 25px;
     transition: transform 0.3s ease-in-out;
-    border: none; /* Removes any border */
-    background-color: transparent; /* Ensures no background */
-    box-shadow: none; /* Removes any box shadow */
-    padding: 0; /* Optional: Removes inner spacing */
+    margin-right: 25px;
+    
 }
 
 .navbar-logo-icon:hover {

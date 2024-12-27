@@ -51,9 +51,9 @@ const Navbar = () => {
       {/* Dropdown Notification */}
       <Notification/>
       {/* User Icon */}
-      <button onClick={handleUserClick} className="navbar-logo-icon">
+      <a onClick={handleUserClick} className="navbar-logo-icon">
         <CiUser />
-      </button>
+      </a>
     </nav>
   );
 };
