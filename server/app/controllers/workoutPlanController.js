@@ -2,19 +2,37 @@ const WeeklyWorkoutPlan = require('../models/WeeklyWorkoutPlan');
 const {
   createDailyWorkoutPlan,
 } = require('../repository/workoutPlanRepository');
-const { generateWorkoutPlan } = require('../services/generateWorkoutPlan');
+const axios = require('axios');
 
+/**
+ * Create a new Weekly Workout Plan
+ */
 const createWeeklyWorkoutPlan = async (req, res) => {
   try {
     const { age, weight, goal, gender, height } = req.body;
 
+    // Validate required fields
     if (!age || !weight || !goal || !gender || !height) {
-      return res
-        .status(400)
-        .json({ message: 'Age, weight, goal, gender, and height are required.' });
+      return res.status(400).json({
+        message: 'Age, weight, goal, gender, and height are required.',
+      });
     }
 
-    // Danh sách các ngày trong tuần
+    // Call external API to generate workout plan
+    const apiResponse = await axios.post(
+      'http://127.0.0.1:6000/generate-weekly-workout-plan',
+      { age, weight, goal, gender, height }
+    );
+
+    if (apiResponse.status !== 200 || !apiResponse.data) {
+      return res
+        .status(500)
+        .json({ message: 'Failed to generate workout plan from API.' });
+    }
+
+    const apiWorkoutData = apiResponse.data;
+
+    // Generate Daily Workout Plans for each day of the week
     const daysOfWeek = [
       'Monday',
       'Tuesday',
@@ -25,20 +43,25 @@ const createWeeklyWorkoutPlan = async (req, res) => {
       'Sunday',
     ];
 
-    // Tạo Daily Workout Plans
     const dailyPlans = [];
-    for (const day of daysOfWeek) {
-      const workouts = generateWorkoutPlan(age, weight, goal); // Gọi AI để sinh bài tập
-      const dailyPlanId = await createDailyWorkoutPlan(day, workouts); // Tạo Daily Workout Plan
-      dailyPlans.push(dailyPlanId); // Lưu ID của mỗi ngày
+    for (const [index, day] of daysOfWeek.entries()) {
+      const workouts = apiWorkoutData[day] || [];
+      const dailyPlanId = await createDailyWorkoutPlan(day, workouts);
+      dailyPlans.push(dailyPlanId);
     }
 
-    // Tạo Weekly Workout Plan
+    // Create Weekly Workout Plan
     const weeklyWorkoutPlan = new WeeklyWorkoutPlan({
       user: req.user._id,
-      week: dailyPlans, // Tham chiếu tới DailyWorkoutPlans
+      week: dailyPlans,
+      goal,
+      age,
+      weight,
+      height,
+      gender,
     });
 
+    // Save WeeklyWorkoutPlan to database
     await weeklyWorkoutPlan.save();
 
     res.status(201).json({
@@ -51,15 +74,43 @@ const createWeeklyWorkoutPlan = async (req, res) => {
   }
 };
 
+/**
+ * Save Weekly Workout Plan to Database (Reusable Function)
+ */
+const saveWeeklyWorkoutPlanToDB = async (data) => {
+  try {
+    const newWeeklyWorkoutPlan = new WeeklyWorkoutPlan({
+      user: data.user,
+      week: data.week,
+      goal: data.goal,
+      age: data.age,
+      weight: data.weight,
+      height: data.height,
+      gender: data.gender,
+      createdAt: data.createdAt,
+    });
+
+    const savedPlan = await newWeeklyWorkoutPlan.save();
+    console.log('WeeklyWorkoutPlan saved:', savedPlan);
+
+    return savedPlan;
+  } catch (error) {
+    console.error('Error saving WeeklyWorkoutPlan:', error);
+    throw error;
+  }
+};
+
+/**
+ * Retrieve the current user's Weekly Workout Plan
+ */
 const getMyWeeklyWorkoutPlan = async (req, res) => {
   try {
-    // Tìm Weekly Workout Plan của người dùng
     const weeklyWorkoutPlan = await WeeklyWorkoutPlan.findOne({
       user: req.user._id,
     }).populate({
       path: 'week', // Populate DailyWorkoutPlan
       populate: {
-        path: 'workouts', // Populate Workout bên trong DailyWorkoutPlan
+        path: 'workouts', // Populate Workout inside DailyWorkoutPlan
         model: 'Workout',
       },
     });

@@ -1,15 +1,20 @@
 import React from 'react';
 import './Footer.css';
+import { useNavigate } from 'react-router-dom';
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaPinterest } from 'react-icons/fa';
 
 const Footer = () => {
+  const navigate = useNavigate(); // Hook dùng để điều hướng
+
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section logo">
-          <h className='footer-logo'> <img src={'/logo.png'} alt="logo" className="footer-logo-img" /></h>
+          <h1 className="footer-logo">
+            <img src={'/logo.png'} alt="logo" className="footer-logo-img" />
+          </h1>
           <p className="faded-text">Build Your Body™</p>
           <p className="faded-text small-text">Your ultimate fitness companion for personalized workout and nutrition plans.</p>
         </div>
@@ -21,8 +26,8 @@ const Footer = () => {
         </div>
         <div className="footer-section">
           <h3>Explore</h3>
-          <p className="footer-effect">Community</p>
-          <p className="footer-effect">Live Classes</p>
+          <p className="footer-effect" onClick={() => navigate('/blogs')}>Our Blogs</p>
+          <p className="footer-effect" onClick={() => navigate('/tools')}>Tools For User</p>
         </div>
         <div className="footer-section">
           <h3>About</h3>
@@ -44,8 +49,8 @@ const Footer = () => {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
-          </div>
         </div>
+      </div>
       <div className="footer-bottom">
         <hr className="footer-separator" />
         <p className="faded-text">&copy; {currentYear} SmartFit & Yoga. All rights reserved. <a href="https://example.com" aria-label="Terms of Use">Terms of Use</a> <a href="https://example.com" aria-label="Privacy Policy">Privacy Policy</a></p>

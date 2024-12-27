@@ -4,7 +4,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load dữ liệu bài tập
-workout_data_path = "workout_dataset.csv"
+workout_data_path = r"D:\Capstone 1\Code Bach's Branch\SmartFitAndYoga\model\workout_dataset.csv"
 workout_data = pd.read_csv(workout_data_path)
 
 # Lưu danh sách bài tập đã sử dụng
@@ -112,4 +112,4 @@ def generate_weekly_workout_plan():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(port=6000)
+    app.run(port=6000, debug=True)

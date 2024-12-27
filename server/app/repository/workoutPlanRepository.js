@@ -18,7 +18,7 @@ const createDailyWorkoutPlan = async (day, workouts) => {
     (acc, workout) => acc + workout.duration,
     0
   );
-  const totalIntensity = 'Medium';
+  const totalIntensity = '2';
 
   const dailyPlan = new DailyWorkoutPlan({
     day,

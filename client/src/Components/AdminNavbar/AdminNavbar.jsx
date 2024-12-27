@@ -7,10 +7,11 @@ import { PiNotificationBold } from 'react-icons/pi';
 import { LiaToolsSolid } from 'react-icons/lia';
 import { GoShieldLock } from 'react-icons/go';
 import { RiLogoutBoxLine } from "react-icons/ri";
-
+import { useNavigate } from 'react-router-dom';
 
 const AdminNavbar = ({ onToggle, onMenuSelect }) => {
     const [isHidden, setIsHidden] = useState(false);
+    const navigate = useNavigate(); // Sử dụng để điều hướng
 
     // Đóng hoặc mở navbar
     const toggleNavbar = () => {
@@ -23,6 +24,15 @@ const AdminNavbar = ({ onToggle, onMenuSelect }) => {
     const showNavbar = () => {
         setIsHidden(false);
         onToggle(false);
+    };
+
+    // Xử lý logout
+    const handleLogout = () => {
+        // Xóa dữ liệu người dùng khỏi localStorage hoặc sessionStorage
+        localStorage.removeItem('token'); // Ví dụ: userToken là token xác thực của bạn
+
+        // Chuyển hướng về trang đăng nhập
+        navigate('/login');
     };
 
     return (
@@ -82,11 +92,10 @@ const AdminNavbar = ({ onToggle, onMenuSelect }) => {
                 </div>
 
                 <span className="dashboard-title">Logout</span>
-                <div className="admin-dashboard-button">
+                <div className="admin-dashboard-button" onClick={handleLogout}>
                     <span className="dashboard-icon"><RiLogoutBoxLine /></span>
                     <span className="dashboard-icon-function">Logout</span>
                 </div>
-
             </div>
         </div>
     );

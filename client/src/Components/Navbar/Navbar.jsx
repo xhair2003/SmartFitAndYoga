@@ -26,7 +26,7 @@ const Navbar = () => {
       </div>
       <div className="spacer"></div>
       <div className="navbar-links">
-        <a href="/" className="navbar-a">
+        <a href="/create" className="navbar-a">
           CREATE PLANS
         </a>
         <a href="/workout-plans" className="navbar-a">
