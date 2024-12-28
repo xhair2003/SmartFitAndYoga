@@ -5,7 +5,7 @@ const workoutSchema = new mongoose.Schema({
     type: String,
     enum: ['Cardio', 'Strength', 'Flexibility','Core','HIIT'],
   }, // Loại bài tập
-  title: { type: String }, // Tên bài tập
+  workout_title: { type: String }, // Tên bài tập
   duration: { type: Number }, // Thời gian tập luyện (phút)
   intensity: { type: String, enum: ['low', 'medium', 'high'] }, // Độ khó
   description: { type: String }, // Mô tả bài tập
