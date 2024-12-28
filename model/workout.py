@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import pandas as pd
+import tensorflow as tf
 
 app = Flask(__name__)
 
@@ -7,10 +8,14 @@ app = Flask(__name__)
 workout_data_path = "workout_dataset.csv"
 workout_data = pd.read_csv(workout_data_path)
 
+# Load mô hình TensorFlow
+model = tf.keras.models.load_model("workout_model.h5")  # Đường dẫn tới mô hình đã huấn luyện
+
 # Lưu danh sách bài tập đã sử dụng
 days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 used_workouts = set()
 
+# Hàm chuyển đổi cường độ
 def convert_intensity(intensity):
     if intensity == 1:
         return "low"
@@ -21,6 +26,7 @@ def convert_intensity(intensity):
     else:
         return "medium"  # Mặc định nếu không phải là 1, 2, 3
 
+# Hàm chọn bài tập hàng ngày
 def get_daily_workouts(predicted_duration, predicted_intensity, workout_data):
     daily_workout_plan = []
     total_duration_used = 0
@@ -29,10 +35,15 @@ def get_daily_workouts(predicted_duration, predicted_intensity, workout_data):
     # Lọc các bài tập chưa được chọn
     available_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
 
-    while total_duration_used < predicted_duration and total_intensity_used < predicted_intensity and len(available_workouts) > 0:
+    if available_workouts.empty:
+        print("No available workouts.")
+        return []
+
+    while total_duration_used < predicted_duration and len(available_workouts) > 0:
+        # Tìm bài tập phù hợp nhất
         best_match = available_workouts.iloc[(
             (available_workouts["duration"] - (predicted_duration - total_duration_used)).abs() +
-            (available_workouts["intensity"] - (predicted_intensity - total_intensity_used)).abs()
+            (available_workouts["intensity"] - (predicted_intensity)).abs()
         ).argsort()[:1]]
 
         for _, workout in best_match.iterrows():
@@ -46,28 +57,13 @@ def get_daily_workouts(predicted_duration, predicted_intensity, workout_data):
                     "description": workout["description"]
                 })
                 total_duration_used += workout["duration"]
-                total_intensity_used += workout["intensity"]
 
         available_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
 
-    if total_duration_used < predicted_duration or total_intensity_used < predicted_intensity:
-        additional_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
-        small_workouts = additional_workouts[additional_workouts["duration"] <= 10]
-
-        while total_duration_used < predicted_duration and total_intensity_used < predicted_intensity and len(small_workouts) > 0:
-            small_workout = small_workouts.iloc[0]
-            used_workouts.add(small_workout["workout_title"])
-            daily_workout_plan.append({
-                "type": small_workout["type"],
-                "workout_title": small_workout["workout_title"],
-                "duration": int(small_workout["duration"]),
-                "intensity": convert_intensity(small_workout["intensity"]),
-                "description": small_workout["description"]
-            })
-            total_duration_used += small_workout["duration"]
-            total_intensity_used += small_workout["intensity"]
-
-            small_workouts = small_workouts[~small_workouts["workout_title"].isin(used_workouts)]
+    if not daily_workout_plan:
+        print("No workouts matched the criteria.")
+    else:
+        print(f"Generated workout plan: {daily_workout_plan}")
 
     return daily_workout_plan
 
@@ -77,21 +73,31 @@ def generate_weekly_workout_plan():
         # Lấy dữ liệu từ yêu cầu
         data = request.json
         age = data.get('age')
-        gender = data.get('gender')
         weight = data.get('weight')
         height = data.get('height')
-        goal = data.get('goal', "General Fitness")
 
-        # Tùy chỉnh predicted_duration và predicted_intensity dựa trên mục tiêu (goal)
-        if goal == "Build Muscle":
-            predicted_duration = 90
-            predicted_intensity = 8
-        elif goal == "Lose Weight":
-            predicted_duration = 60
-            predicted_intensity = 7
-        else:  # General Fitness
-            predicted_duration = 45
-            predicted_intensity = 5
+        # Kiểm tra và xử lý dữ liệu đầu vào
+        if not isinstance(age, (int, float)):
+            raise ValueError("Age must be a number.")
+        if not isinstance(weight, (int, float)):
+            raise ValueError("Weight must be a number.")
+        if not isinstance(height, (int, float)):
+            raise ValueError("Height must be a number.")
+
+        # Chuẩn bị dữ liệu đầu vào cho mô hình (chỉ giữ lại 3 đặc trưng)
+        input_data = pd.DataFrame([{
+            "age": age,
+            "weight": weight,
+            "height": height
+        }])
+
+        # Chuyển đổi kiểu dữ liệu về float để tránh lỗi dtype
+        input_data = input_data.astype(float)
+
+        # Dự đoán thời gian và cường độ tập luyện bằng TensorFlow
+        predictions = model.predict(input_data)
+        predicted_duration = int(predictions[0][0])
+        predicted_intensity = int(predictions[0][1])
 
         weekly_workout_plan = []
 
@@ -101,10 +107,8 @@ def generate_weekly_workout_plan():
 
         return jsonify({
             "age": age,
-            "gender": gender,
             "weight": weight,
             "height": height,
-            "goal": goal,
             "weekly_workout_plan": weekly_workout_plan
         })
 
