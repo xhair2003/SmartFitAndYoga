@@ -132,4 +132,19 @@ const aIPredict = async (req, res) => {
   }
 };
 
-module.exports = { createWeeklyWorkoutPlan, getMyWeeklyWorkoutPlan, aIPredict };
+const countWorkoutPlans = async (req, res) => {
+  try {
+    const weeklyWorkoutPlanCount = await WeeklyWorkoutPlan.countDocuments();
+    //const dailyMealPlanCount = await DailyMealPlan.countDocuments(); // Nếu có schema DailyMealPlan
+
+    res.status(200).json({
+      weeklyWorkoutPlanCount,
+      //dailyMealPlanCount,
+    });
+  } catch (error) {
+    console.error('Error counting meal plans:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createWeeklyWorkoutPlan, getMyWeeklyWorkoutPlan, aIPredict, countWorkoutPlans};
