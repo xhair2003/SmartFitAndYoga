@@ -21,7 +21,7 @@ const ProgressTracking = () => {
   return (
     <div>
         <Navbar/>
-        <header className="header">
+        <header className="workout-header">
             <h1>Progress Tracking</h1>
         </header>
         <div className="progress-tracking-container">

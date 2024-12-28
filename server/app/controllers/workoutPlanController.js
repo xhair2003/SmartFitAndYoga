@@ -1,8 +1,6 @@
 const WeeklyWorkoutPlan = require('../models/WeeklyWorkoutPlan');
-const {
-  createDailyWorkoutPlan,
-} = require('../repository/workoutPlanRepository');
-const axios = require('axios');
+const { createDailyWorkoutPlan } = require('../repository/workoutPlanRepository');
+const { callPredictApi } = require('../services/workoutService');
 
 /**
  * Create a new Weekly Workout Plan
@@ -18,21 +16,14 @@ const createWeeklyWorkoutPlan = async (req, res) => {
       });
     }
 
-    // Call external API to generate workout plan
-    const apiResponse = await axios.post(
-      'http://127.0.0.1:6000/generate-weekly-workout-plan',
-      { age, weight, goal, gender, height }
-    );
-
-    if (apiResponse.status !== 200 || !apiResponse.data) {
-      return res
-        .status(500)
-        .json({ message: 'Failed to generate workout plan from API.' });
+    // Validate authentication
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'User not authenticated.' });
     }
 
-    const apiWorkoutData = apiResponse.data;
+    // Mock or fetch workouts data
+    const apiWorkoutData = {}; // Replace this with the actual data fetching logic or mock data.
 
-    // Generate Daily Workout Plans for each day of the week
     const daysOfWeek = [
       'Monday',
       'Tuesday',
@@ -44,13 +35,15 @@ const createWeeklyWorkoutPlan = async (req, res) => {
     ];
 
     const dailyPlans = [];
-    for (const [index, day] of daysOfWeek.entries()) {
+    for (const day of daysOfWeek) {
       const workouts = apiWorkoutData[day] || [];
+      if (!Array.isArray(workouts) || workouts.length === 0) {
+        throw new Error(`No workouts provided for day ${day}`);
+      }
       const dailyPlanId = await createDailyWorkoutPlan(day, workouts);
       dailyPlans.push(dailyPlanId);
     }
 
-    // Create Weekly Workout Plan
     const weeklyWorkoutPlan = new WeeklyWorkoutPlan({
       user: req.user._id,
       week: dailyPlans,
@@ -61,7 +54,6 @@ const createWeeklyWorkoutPlan = async (req, res) => {
       gender,
     });
 
-    // Save WeeklyWorkoutPlan to database
     await weeklyWorkoutPlan.save();
 
     res.status(201).json({
@@ -131,4 +123,65 @@ const getMyWeeklyWorkoutPlan = async (req, res) => {
   }
 };
 
-module.exports = { createWeeklyWorkoutPlan, getMyWeeklyWorkoutPlan };
+/**
+ * Generate Weekly Workout Plan using AI Prediction
+ */
+const aIPredict = async (req, res) => {
+  try {
+    const { age, gender, weight, height, goal } = req.body;
+
+    if (!age || !gender || !weight || !height || !goal) {
+      return res
+        .status(400)
+        .json({ message: 'Age, weight, goal are required.' });
+    }
+
+    // Validate authentication
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'User not authenticated.' });
+    }
+
+    // Call the API to predict
+    const result = await callPredictApi(age, gender, weight, height, goal);
+
+    if ('weekly_workout_plan' in result) {
+      const dailyPlans = [];
+
+      for (const detail of result['weekly_workout_plan']) {
+        const day = detail['day'];
+        const workouts = detail['workouts'];
+
+        // Insert daily workout plans into the repository
+        const dailyPlanId = await createDailyWorkoutPlan(day, workouts);
+        dailyPlans.push(dailyPlanId);
+      }
+
+      // Save the weekly plan with references to daily plans
+      const weeklyWorkoutPlan = new WeeklyWorkoutPlan({
+        user: req.user._id,
+        week: dailyPlans, // Store references to the created daily plans
+      });
+
+      await weeklyWorkoutPlan.save();
+
+      // Respond to the client
+      return res.status(201).json({
+        message: 'Weekly Workout Plan created successfully.',
+        weeklyWorkoutPlan,
+      });
+    } else {
+      return res.status(400).json({
+        message: 'No weekly workout plan data received.',
+      });
+    }
+  } catch (error) {
+    console.error('Error creating weekly workout plan:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  createWeeklyWorkoutPlan,
+  getMyWeeklyWorkoutPlan,
+  aIPredict,
+};

@@ -14,6 +14,7 @@ import AdminDashPage from "../pages/DashBoard_Admin/AdminDashPage.jsx";
 import ProgressTracking from "../pages/ProgressTrackingPage/ProgressTracking.jsx";
 import Blog from "../pages/Blog/Blog.jsx";
 import ToolForUser from "../pages/ToolForUser/ToolForUser.jsx";
+import GeneratorPlansPage from "../pages/GeneratorPlans/GeneratorPlans.jsx";
 
 export const routes = [
     {   
@@ -43,8 +44,8 @@ export const routes = [
     },
     {   
         id: 6,
-        path: '/create',
-        page: CreatePage,
+        path: '/generator',
+        page: GeneratorPlansPage,
     },
     {   
         id: 7,

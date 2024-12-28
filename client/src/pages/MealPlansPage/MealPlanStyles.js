@@ -5,7 +5,7 @@ export const PageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #202020;
+  background-color: #f7f7f7;
   min-height: 100vh;
 `;
 
@@ -42,7 +42,7 @@ export const DailyDetails = styled.div`
   background-color: #ffffff;
   padding: 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 `;
 
 export const SectionTitle = styled.h2`
@@ -94,6 +94,7 @@ export const DaysOfWeek = styled.div`
   background-color: #ffffff;
   padding: 15px;
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 `;
 
 export const DayList = styled.ul`
@@ -108,7 +109,7 @@ export const DayItem = styled.li`
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   &:hover {
     color: #000000;
   }
@@ -137,7 +138,7 @@ export const MealCard = styled.div`
   border-radius: 10px;
   padding: 20px;
   color: #000000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   @media (max-width: 768px) {
     padding: 15px;
   }
@@ -187,7 +188,7 @@ export const IngredientItem = styled.li`
     color: #333;
     display: inline-block;
     width: 1em;
-    margin-left: -1em;
+    margin-left: 10px;
   }
 `;
 
@@ -224,6 +225,22 @@ export const Loading = styled.div`
   color: #666;
 `;
 export const RecipeLink = styled.a`
-  color: #00ff00;
-  text-decoration: none;
+  color: #007bff; /* Màu xanh nhẹ */
+  text-decoration: none; /* Loại bỏ gạch chân mặc định */
+  font-weight: medium; /* Tăng độ đậm để dễ nhìn */
+  transition: color 0.3s ease, text-decoration 0.3s ease; /* Hiệu ứng chuyển đổi */
+  margin-top: 10px;
+  &:hover {
+    color: #0056b3; /* Màu xanh đậm hơn khi hover */
+    text-decoration: underline; /* Gạch chân khi hover */
+  }
+
+  &:visited {
+    color: #551a8b; /* Màu tím khi đã truy cập */
+  }
+
+  &:focus {
+    outline: 2px dashed #00ff00; /* Đường viền khi được focus */
+    outline-offset: 2px; /* Khoảng cách viền focus */
+  }
 `;

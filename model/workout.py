@@ -1,42 +1,70 @@
 from flask import Flask, request, jsonify
+import numpy as np
 import pandas as pd
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from sklearn.model_selection import train_test_split
 
+# Initialize Flask app
 app = Flask(__name__)
 
-# Load dữ liệu bài tập
-workout_data_path = r"D:\Capstone 1\Code Bach's Branch\SmartFitAndYoga\model\workout_dataset.csv"
-workout_data = pd.read_csv(workout_data_path)
+# 1. Load Dataset
+daily_workout_dataset_path = "daily_workout_dataset.csv"
+workout_dataset_path = "workout_dataset.csv"
 
-# Lưu danh sách bài tập đã sử dụng
-days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-used_workouts = set()
+daily_workout_data = pd.read_csv(daily_workout_dataset_path)
+workout_data = pd.read_csv(workout_dataset_path)
 
-def convert_intensity(intensity):
-    if intensity == 1:
-        return "low"
-    elif intensity == 2:
-        return "medium"
-    elif intensity == 3:
-        return "high"
-    else:
-        return "medium"  # Mặc định nếu không phải là 1, 2, 3
+# Preprocessing
+daily_workout_data = daily_workout_data.dropna()
+daily_workout_data['age'] = pd.to_numeric(daily_workout_data['age'], errors='coerce')
+daily_workout_data['weight'] = pd.to_numeric(daily_workout_data['weight'], errors='coerce')
+daily_workout_data['height'] = pd.to_numeric(daily_workout_data['height'], errors='coerce')
+daily_workout_data['gender'] = pd.to_numeric(daily_workout_data['gender'], errors='coerce')
+goal_map = {"Lose Weight": 0, "Build Muscle": 1, "Maintain Weight": 2}
+daily_workout_data['goal'] = daily_workout_data['goal'].map(goal_map)
+daily_workout_data = daily_workout_data.dropna()
 
-def get_daily_workouts(predicted_duration, predicted_intensity, workout_data):
-    daily_workout_plan = []
-    total_duration_used = 0
-    total_intensity_used = 0
+X = daily_workout_data[['age', 'gender', 'weight', 'height', 'goal']].values
+y = daily_workout_data[['total_duration', 'total_intensity']].values
 
-    # Lọc các bài tập chưa được chọn
-    available_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
+X_min, X_max = X.min(axis=0), X.max(axis=0)
+X = (X - X_min) / (X_max - X_min)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    while total_duration_used < predicted_duration and total_intensity_used < predicted_intensity and len(available_workouts) > 0:
-        best_match = available_workouts.iloc[(
-            (available_workouts["duration"] - (predicted_duration - total_duration_used)).abs() +
-            (available_workouts["intensity"] - (predicted_intensity - total_intensity_used)).abs()
-        ).argsort()[:1]]
+# Model definition
+model = Sequential([
+    Dense(32, input_dim=5, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+    Dropout(0.2),
+    Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+    Dense(2)
+])
+model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+model.fit(X_train, y_train, epochs=100, batch_size=16, validation_data=(X_test, y_test), verbose=1)
 
-        for _, workout in best_match.iterrows():
-            if workout["workout_title"] not in used_workouts:
+# Helper function for generating weekly workout plan
+def generate_weekly_workout_plan(predicted_duration, predicted_intensity, workout_data):
+    weekly_workout_plan = []
+    used_workouts = set()
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+    def convert_intensity(intensity):
+        return ["low", "medium", "high"][intensity - 1] if 1 <= intensity <= 3 else "medium"
+
+    def get_daily_workouts(predicted_duration, predicted_intensity, workout_data):
+        daily_workout_plan = []
+        total_duration_used = 0
+        total_intensity_used = 0
+        available_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
+
+        while total_duration_used < predicted_duration and total_intensity_used < predicted_intensity and len(available_workouts) > 0:
+            best_match = available_workouts.iloc[(
+                (available_workouts["duration"] - (predicted_duration - total_duration_used)).abs() +
+                (available_workouts["intensity"] - (predicted_intensity - total_intensity_used)).abs()
+            ).argsort()[:1]]
+
+            for _, workout in best_match.iterrows():
                 used_workouts.add(workout["workout_title"])
                 daily_workout_plan.append({
                     "type": workout["type"],
@@ -48,68 +76,48 @@ def get_daily_workouts(predicted_duration, predicted_intensity, workout_data):
                 total_duration_used += workout["duration"]
                 total_intensity_used += workout["intensity"]
 
-        available_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
+            available_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
 
-    if total_duration_used < predicted_duration or total_intensity_used < predicted_intensity:
-        additional_workouts = workout_data[~workout_data["workout_title"].isin(used_workouts)]
-        small_workouts = additional_workouts[additional_workouts["duration"] <= 10]
+        return daily_workout_plan
 
-        while total_duration_used < predicted_duration and total_intensity_used < predicted_intensity and len(small_workouts) > 0:
-            small_workout = small_workouts.iloc[0]
-            used_workouts.add(small_workout["workout_title"])
-            daily_workout_plan.append({
-                "type": small_workout["type"],
-                "workout_title": small_workout["workout_title"],
-                "duration": int(small_workout["duration"]),
-                "intensity": convert_intensity(small_workout["intensity"]),
-                "description": small_workout["description"]
-            })
-            total_duration_used += small_workout["duration"]
-            total_intensity_used += small_workout["intensity"]
+    for day_name in days_of_week:
+        daily_workout_plan = get_daily_workouts(predicted_duration, predicted_intensity, workout_data)
+        weekly_workout_plan.append({"day": day_name, "workouts": daily_workout_plan})
 
-            small_workouts = small_workouts[~small_workouts["workout_title"].isin(used_workouts)]
+    return weekly_workout_plan
 
-    return daily_workout_plan
+# Flask endpoint
+@app.route("/generate-weekly-workout-plan", methods=["POST"])
+def generate_plan():
+    data = request.json
 
-@app.route('/generate-weekly-workout-plan', methods=['POST'])
-def generate_weekly_workout_plan():
-    try:
-        # Lấy dữ liệu từ yêu cầu
-        data = request.json
-        age = data.get('age')
-        gender = data.get('gender')
-        weight = data.get('weight')
-        height = data.get('height')
-        goal = data.get('goal', "General Fitness")
+    # User info from request
+    age = data.get("age")
+    gender = data.get("gender")
+    weight = data.get("weight")
+    height = data.get("height")
+    goal = data.get("goal")
 
-        # Tùy chỉnh predicted_duration và predicted_intensity dựa trên mục tiêu (goal)
-        if goal == "Build Muscle":
-            predicted_duration = 90
-            predicted_intensity = 8
-        elif goal == "Lose Weight":
-            predicted_duration = 60
-            predicted_intensity = 7
-        else:  # General Fitness
-            predicted_duration = 45
-            predicted_intensity = 5
+    # Validate input
+    if not all(isinstance(v, (int, float)) for v in [age, gender, weight, height]) or goal not in goal_map:
+        return jsonify({"error": "Invalid input"}), 400
 
-        weekly_workout_plan = []
+    # Preprocess user input
+    goal_encoded = goal_map[goal]
+    user_input = np.array([[age, gender, weight, height, goal_encoded]])
+    user_input = (user_input - X_min) / (X_max - X_min)
 
-        for day_name in days_of_week:
-            daily_workout_plan = get_daily_workouts(predicted_duration, predicted_intensity, workout_data)
-            weekly_workout_plan.append({"day": day_name, "workouts": daily_workout_plan})
+    # Predict duration and intensity
+    predicted_duration, predicted_intensity = model.predict(user_input)[0]
+    
+    # Convert NumPy float32 to Python float
+    predicted_duration = float(predicted_duration)
+    predicted_intensity = float(predicted_intensity)
 
-        return jsonify({
-            "age": age,
-            "gender": gender,
-            "weight": weight,
-            "height": height,
-            "goal": goal,
-            "weekly_workout_plan": weekly_workout_plan
-        })
+    # Generate weekly workout plan
+    weekly_plan = generate_weekly_workout_plan(predicted_duration, predicted_intensity, workout_data)
+    return jsonify({"predicted_duration": predicted_duration, "predicted_intensity": predicted_intensity, "weekly_plan": weekly_plan})
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(port=6000, debug=True)
+# Run Flask app
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=6000, debug=True)

@@ -90,4 +90,15 @@ const resetPassword = async (token, newPassword) => {
   return user;
 };
 
-module.exports = { register, login, requestPasswordReset, resetPassword };
+// const profileUser = async (req, res) => {
+  
+// };
+
+
+module.exports = { 
+  register, 
+  login, 
+  requestPasswordReset, 
+  resetPassword, 
+  //profileUser
+};

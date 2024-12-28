@@ -1,6 +1,7 @@
 const WeeklyMealPlan = require('../models/WeeklyMealPlan');
 const { createDailyMealPlan } = require('../repository/mealPlanRepository');
 const { generateMealPlan } = require('../services/aiMealPlanService');
+const { callPredictApi } = require('../services/mealService');
 
 const createWeeklyMealPlan = async (req, res) => {
   try {
@@ -78,4 +79,52 @@ const getMyWeeklyMealPlan = async (req, res) => {
   }
 };
 
-module.exports = { createWeeklyMealPlan, getMyWeeklyMealPlan };
+const aIPredict = async (req, res) => {
+  try {
+    const { age, weight, height } = req.body;
+
+    if (!age || !weight || !height) {
+      return res
+        .status(400)
+        .json({ message: 'Age, weight, and height are required.' });
+    }
+
+    // Call the API to predict
+    const result = await callPredictApi(age, weight, height);
+
+    if ('weekly_meal_plan' in result) {
+      const dailyPlans = [];
+
+      for (const detail of result['weekly_meal_plan']) {
+        const day = detail['day'];
+        const meals = detail['meals'];
+
+        // Insert daily meal plans into the repository
+        const dailyPlanId = await createDailyMealPlan(day, meals);
+        dailyPlans.push(dailyPlanId);
+      }
+
+      // Save the weekly plan with references to daily plans
+      const weeklyMealPlan = new WeeklyMealPlan({
+        user: req.user._id,
+        week: dailyPlans, // Store references to the created daily plans
+      });
+
+      await weeklyMealPlan.save();
+
+      // Respond to the client
+      return res.status(201).json({
+        message: 'Weekly Meal Plan created successfully.',
+        weeklyMealPlan,
+      });
+    } else {
+      return res.status(400).json({ message: 'No weekly meal plan data received.' });
+    }
+  } catch (error) {
+    console.error('Error creating weekly meal plan:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+module.exports = { createWeeklyMealPlan, getMyWeeklyMealPlan, aIPredict };

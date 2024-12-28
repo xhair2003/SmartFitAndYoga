@@ -26,8 +26,8 @@ const Navbar = () => {
       </div>
       <div className="spacer"></div>
       <div className="navbar-links">
-        <a href="/create" className="navbar-a">
-          CREATE PLANS
+        <a href="/generator" className="navbar-a">
+          GENERATION PLANS
         </a>
         <a href="/workout-plans" className="navbar-a">
           WORKOUT PLANS

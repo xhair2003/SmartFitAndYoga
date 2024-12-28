@@ -96,6 +96,7 @@ const AdminNavbar = ({ onToggle, onMenuSelect }) => {
                     <span className="dashboard-icon"><RiLogoutBoxLine /></span>
                     <span className="dashboard-icon-function">Logout</span>
                 </div>
+
             </div>
         </div>
     );

@@ -1,285 +1,130 @@
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import './CreatePageStyles.css';
-
-// const CreatePage = () => {
-//   const [formData, setFormData] = useState({
-//     age: "",
-//     weight: "",
-//     height: "",
-//   });
-
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
-
-//   const navigate = useNavigate();
-
-//   // Assume you have a function to get the token (e.g., from localStorage)
-//   const getToken = () => localStorage.getItem("token"); // Replace this with your token retrieval logic
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     // Validate form inputs
-//     if (!formData.age || !formData.height || !formData.weight) {
-//       alert("Please fill in all the required fields.");
-//       return;
-//     }
-
-//     // Prepare the data payload
-//     const payload = {
-//       age: parseInt(formData.age, 10),
-//       weight: parseFloat(formData.weight),
-//       height: parseFloat(formData.height),
-//     };
-
-//     try {
-//       setLoading(true);
-//       setError(null);
-
-//       // Retrieve the token
-//       const token = getToken();
-//       if (!token) {
-//         throw new Error("Token is missing. Please log in again.");
-//       }
-
-//       // Call the API using axios
-//       const response = await axios.post(
-//         "http://localhost:5000/api/meal-plans",
-//         payload,
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`, // Add token here
-//           },
-//         }
-//       );
-
-//       console.log("Meal plan generated:", response.data);
-
-//       // Navigate to the next page with the meal plan data
-//       navigate("/plans", { state: { mealPlan: response.data } });
-//     } catch (err) {
-//       console.error("Error generating meal plan:", err);
-//       setError("Failed to generate meal plan. Please try again.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="meal-plan-container">
-//       <div className="meal-plan-header">
-//         <h1>Create your plan</h1>
-//         <p>
-//           Please provide your age, weight, and height to generate a tailored meal plan.
-//         </p>
-//       </div>
-//       <form className="meal-plan-form" onSubmit={handleSubmit}>
-//         <div className="form-group">
-//           <input
-//             type="number"
-//             name="age"
-//             placeholder="Age"
-//             value={formData.age}
-//             onChange={handleChange}
-//           />
-//           <input
-//             type="number"
-//             name="height"
-//             placeholder="Height (Centimeters)"
-//             value={formData.height}
-//             onChange={handleChange}
-//           />
-//           <input
-//             type="number"
-//             name="weight"
-//             placeholder="Weight (KG)"
-//             value={formData.weight}
-//             onChange={handleChange}
-//           />
-//         </div>
-//         {loading && <p>Loading...</p>}
-//         {error && <p style={{ color: "red" }}>{error}</p>}
-//         <button type="submit" className="generate-button" disabled={loading}>
-//           Generate meal plan
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default CreatePage;
-
-import React, { useState } from "react";
-import Stepper from "../../Components/Stepper/Stepper"; // Import Stepper
-import './CreatePageStyles.css';
-import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import Axios for API calls
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Assuming you're using React Router
 
 const CreatePage = () => {
-  const [formData, setFormData] = useState({
-    age: "",
-    height: "",
-    weight: "",
-    sex: "Male",
-    goal: "Build Muscle",
-    allergies: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null); // For handling API errors
+    const [formData, setFormData] = useState({ age: '', weight: '', height: '', goal: '' });
+    const [error, setError] = useState(null);
+    const navigate = useNavigate(); // Hook for navigation
 
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Get the token from localStorage
-  const getToken = () => localStorage.getItem("token");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate form inputs
-    if (!formData.age || !formData.height || !formData.weight) {
-      alert("Please fill in all the required fields.");
-      return;
-    }
-
-    setIsSubmitting(true); // Set loading state
-    console.log("Form Data Submitted: ", formData);
-
-    // Prepare the payload data for the server
-    const payload = {
-      age: parseInt(formData.age, 10),
-      weight: parseFloat(formData.weight),
-      height: parseFloat(formData.height),
-      sex: formData.sex,
-      goal: formData.goal,
-      allergies: formData.allergies,
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
-    try {
-      // Make API call to generate meal plan
-      const token = getToken();
-      if (!token) {
-        throw new Error("Token is missing. Please log in again.");
-      }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/meal-plans", // Replace with your server URL
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+        try {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                throw new Error('Token is missing. Please log in.');
+            }
+
+            // Prepare the payloads for both APIs
+            const mealPlanPayload = {
+                age: parseInt(formData.age, 10), // Convert age to integer
+                weight: parseFloat(formData.weight), // Convert weight to float
+                height: parseFloat(formData.height), // Convert height to float
+            };
+
+            const workoutPlanPayload = {
+                age: parseInt(formData.age, 10), // Convert age to integer
+                weight: parseFloat(formData.weight), // Convert weight to float
+                goal: formData.goal, // Use the goal field
+            };
+
+            // Send requests to both APIs
+            const [mealPlanResponse, workoutPlanResponse] = await Promise.all([
+                axios.post('http://localhost:5000/api/meal-plans/predict', mealPlanPayload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                }),
+                axios.post('http://localhost:5000/api/workout-plans/generate-weekly-workout-plan', workoutPlanPayload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                }),
+            ]);
+
+            console.log('Meal Plan Response:', mealPlanResponse.data);
+            console.log('Workout Plan Response:', workoutPlanResponse.data);
+
+            // If both are successful, navigate to "/"
+            navigate('/');
+        } catch (err) {
+            // Display error message
+            const errorMessage = err.response
+                ? (err.response.data.error || JSON.stringify(err.response.data))
+                : err.message || 'An error occurred.';
+            setError(errorMessage);
         }
-      );
+    };
 
-      console.log("Meal plan generated:", response.data);
+    return (
+        <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', textAlign: 'center' }}>
+            <h1>Health Plan Generator</h1>
+            <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Age:</label>
+                    <input
+                        type="number"
+                        name="age"
+                        value={formData.age}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Weight (kg):</label>
+                    <input
+                        type="number"
+                        name="weight"
+                        value={formData.weight}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Height (cm):</label>
+                    <input
+                        type="number"
+                        name="height"
+                        value={formData.height}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Goal:</label>
+                    <select
+                        name="goal"
+                        value={formData.goal}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select a goal</option>
+                        <option value="Weight Loss">Weight Loss</option>
+                        <option value="Muscle Gain">Muscle Gain</option>
+                        <option value="Maintain Weight">Maintain Weight</option>
+                    </select>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
 
-      // Navigate to another page with the response data
-      navigate("/loading", { state: { mealPlan: response.data } });
-    } catch (err) {
-      console.error("Error generating meal plan:", err);
-      setError("Failed to generate meal plan. Please try again.");
-    } finally {
-      setIsSubmitting(false); // Turn off loading state
-    }
-  };
-
-  return (
-    <div className="container">
-      <Stepper currentStep={1} />
-      <h1>Create Your Plan</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>} {/* Show error message if any */}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="age">Age</label>
-          <input
-            type="number"
-            id="age"
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            placeholder="Enter your age"
-          />
+            {error && (
+                <div style={{ marginTop: '20px', color: 'red' }}>
+                    <h2>Error:</h2>
+                    <p>{typeof error === 'string' ? error : JSON.stringify(error, null, 2)}</p>
+                </div>
+            )}
         </div>
-        <div className="form-group">
-          <label htmlFor="height">Height (Centimeters)</label>
-          <input
-            type="number"
-            id="height"
-            name="height"
-            value={formData.height}
-            onChange={handleChange}
-            placeholder="Enter your height"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="weight">Weight (KG)</label>
-          <input
-            type="number"
-            id="weight"
-            name="weight"
-            value={formData.weight}
-            onChange={handleChange}
-            placeholder="Enter your weight"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="sex">Sex</label>
-          <select
-            id="sex"
-            name="sex"
-            value={formData.sex}
-            onChange={handleChange}
-          >
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="goal">Goal and Aspiration</label>
-          <select
-            id="goal"
-            name="goal"
-            value={formData.goal}
-            onChange={handleChange}
-          >
-            <option value="Build Muscle">Build Muscle</option>
-            <option value="Lose Weight">Lose Weight</option>
-            <option value="Maintain Weight">Maintain Weight</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="allergies">Allergies or Ingredients to Avoid</label>
-          <textarea
-            id="allergies"
-            name="allergies"
-            value={formData.allergies}
-            onChange={handleChange}
-            placeholder="List any allergies or ingredients to avoid"
-          ></textarea>
-        </div>
-        <button type="submit" className="button" disabled={isSubmitting}>
-          {isSubmitting ? "Generating..." : "Generate Plan"}
-        </button>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default CreatePage;

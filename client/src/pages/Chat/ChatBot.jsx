@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./ChatBot.css";
+import "./ChatBot.css";
 import { FaMinus } from "react-icons/fa";
 import { RiRobot3Fill } from "react-icons/ri";
 import { IoLogoWechat } from "react-icons/io5";
@@ -96,7 +96,7 @@ const ChatBot = () => {
     <div className="chatbot">
       {/* Biểu tượng chatbot */}
       <div className="messengerIcon" onClick={toggleChat}>
-        <IoLogoWechat size={50} color="white" />
+        <IoLogoWechat size={50} color="#0099FF" />
       </div>
 
       {/* Cửa sổ chat */}

@@ -52,8 +52,10 @@ const MealPlanPage = () => {
   return (
     <div>
       <Navbar />
+      <div className='nutrition-header'>
+          <h1>NUTRITION PLAN</h1>
+      </div>
       <S.PageContainer>
-        <S.Title>Nutrition Plan</S.Title>
         {loading ? (
           <p>Loading...</p> // Hiển thị trạng thái loading
         ) : error ? (
@@ -134,7 +136,7 @@ const MealPlanPage = () => {
                       </S.NutritionItem>
                     </S.NutritionInfo>
                     <S.RecipeLink>
-                      <a href={meal.recipeLink} target="_blank" rel="noopener noreferrer">Recipe Link</a>
+                       <a href={meal.recipe}> {meal.recipe}</a>
                     </S.RecipeLink>
                   </S.MealContent>
                 </S.MealCard>
