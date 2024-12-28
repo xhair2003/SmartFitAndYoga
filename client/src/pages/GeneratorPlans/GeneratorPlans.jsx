@@ -45,7 +45,9 @@ const GeneratorPlansPage = () => {
 
             const workoutPlanPayload = {
                 age: parseInt(formData.age, 10),
+                gender: parseInt(formData.gender, 10), // Convert gender to integer
                 weight: parseFloat(formData.weight),
+                height: parseFloat(formData.height),
                 goal: formData.goal,
             };
 
@@ -163,7 +165,6 @@ const GeneratorPlansPage = () => {
                 {loading && (
                     <div className="loading-overlay">
                         <div className="loading-spinner"></div>
-                        <p>Loading</p>
                     </div>
                 )}
 

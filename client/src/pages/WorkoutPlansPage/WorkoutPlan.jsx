@@ -95,6 +95,7 @@ const WorkoutPlan = () => {
                                 onClick={() => handleExerciseClick(exercise)}
                               >
                                 <h3>{exercise.title}</h3>
+                                <p>{exercise.workout_title} mins</p>
                                 <p>Duration: {exercise.duration} mins</p>
                                 <p>Intensity: {exercise.intensity}</p>
                               </div>
@@ -123,6 +124,8 @@ const WorkoutPlan = () => {
                 </button>
               </div>
               <div>
+                <p><strong>Title:</strong> {selectedExercise.workout_title}</p>
+                <p><strong>Type:</strong> {selectedExercise.type}</p>
                 <p><strong>Duration:</strong> {selectedExercise.duration} mins</p>
                 <p><strong>Intensity:</strong> {selectedExercise.intensity}</p>
                 <p><strong>Description:</strong> {selectedExercise.description}</p>

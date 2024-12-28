@@ -167,7 +167,7 @@
 /* Thông tin khác (duration, intensity) */
 .workout-daily-item p {
   margin: 5px 0;
-  color: #555; /* Màu sắc tối hơn cho các mô tả */
+  color: #0c0c0c; /* Màu sắc tối hơn cho các mô tả */
   font-size: 1.1rem; /* Kích thước chữ vừa phải để dễ đọc */
 }
 
@@ -181,7 +181,7 @@
   justify-content: space-between; /* Căn chỉnh thông tin vào hai bên */
   margin-top: 10px;
   font-size: 1rem;
-  color: #777; /* Màu sắc dịu nhẹ cho thông tin */
+  color: #000000; /* Màu sắc dịu nhẹ cho thông tin */
 }
 
 .workout-daily-item .info span {

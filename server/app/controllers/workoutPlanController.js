@@ -128,55 +128,52 @@ const getMyWeeklyWorkoutPlan = async (req, res) => {
  */
 const aIPredict = async (req, res) => {
   try {
-    const { age, gender, weight, height, goal } = req.body;
+    const { age, weight, goal, height, gender } = req.body;
 
-    if (!age || !gender || !weight || !height || !goal) {
-      return res
-        .status(400)
-        .json({ message: 'Age, weight, goal are required.' });
+    // Validate input data
+    if (!age || !weight || !goal || !height || !gender) {
+      return res.status(400).json({
+        message: 'Age, weight, goal, height, and gender are required.',
+      });
     }
 
-    // Validate authentication
-    if (!req.user || !req.user._id) {
-      return res.status(401).json({ message: 'User not authenticated.' });
-    }
+    console.log('Input data:', { age, weight, goal, height, gender });
 
-    // Call the API to predict
-    const result = await callPredictApi(age, gender, weight, height, goal);
+    // Call prediction API
+    const result = await callPredictApi(age, weight, goal, height, gender);
 
-    if ('weekly_workout_plan' in result) {
+    console.log('Predict API result:', result);
+
+    if (result && result.weekly_plan) {
       const dailyPlans = [];
 
-      for (const detail of result['weekly_workout_plan']) {
-        const day = detail['day'];
-        const workouts = detail['workouts'];
-
-        // Insert daily workout plans into the repository
+      // Process weekly workout plan details
+      for (const detail of result.weekly_plan) {
+        const { day, workouts } = detail;
         const dailyPlanId = await createDailyWorkoutPlan(day, workouts);
         dailyPlans.push(dailyPlanId);
       }
 
-      // Save the weekly plan with references to daily plans
+      // Save the weekly workout plan
       const weeklyWorkoutPlan = new WeeklyWorkoutPlan({
         user: req.user._id,
-        week: dailyPlans, // Store references to the created daily plans
+        week: dailyPlans,
       });
 
       await weeklyWorkoutPlan.save();
 
-      // Respond to the client
       return res.status(201).json({
         message: 'Weekly Workout Plan created successfully.',
         weeklyWorkoutPlan,
       });
     } else {
       return res.status(400).json({
-        message: 'No weekly workout plan data received.',
+        message: 'No weekly workout plan data received from prediction.',
       });
     }
   } catch (error) {
-    console.error('Error creating weekly workout plan:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error creating weekly workout plan with AI:', error);
+    return res.status(500).json({ error: error.message });
   }
 };
 
