@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Dashboard.css";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
-  PointElement,
-  LineElement,
   ArcElement,
   Title,
   Tooltip,
@@ -19,8 +17,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  PointElement,
-  LineElement,
   ArcElement,
   Title,
   Tooltip,
@@ -29,23 +25,52 @@ ChartJS.register(
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
+  const [mealPlanCount, setMealPlanCount] = useState(null);
+  const [workoutPlanCount, setWorkoutPlanCount] = useState(null);
 
   useEffect(() => {
-    const fetchDashboardStats = async () => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/admin/users/getDashboardStats", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setDashboardData(response.data);
+        // Fetch Dashboard Stats
+        const dashboardResponse = await axios.get(
+          "http://localhost:5000/api/admin/users/getDashboardStats",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setDashboardData(dashboardResponse.data);
+
+        // Fetch Meal Plan Count
+        const mealPlanResponse = await axios.get(
+          "http://localhost:5000/api/meal-plans/count",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setMealPlanCount(mealPlanResponse.data.weeklyMealPlanCount);
+
+        // Fetch Workout Plan Count
+        const workoutPlanResponse = await axios.get(
+          "http://localhost:5000/api/workout-plans/count",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setWorkoutPlanCount(workoutPlanResponse.data.weeklyWorkoutPlanCount);
       } catch (error) {
-        console.error("Error fetching dashboard stats:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchDashboardStats();
+    fetchData();
   }, []);
 
   if (!dashboardData) {
@@ -97,13 +122,33 @@ const Dashboard = () => {
         backgroundColor: [
           "rgba(255, 99, 132, 0.6)",
           "rgba(54, 162, 235, 0.6)",
-          "rgba(75, 192, 192, 0.6)"
+          "rgba(75, 192, 192, 0.6)",
         ],
         borderColor: [
           "rgba(255, 99, 132, 1)",
           "rgba(54, 162, 235, 1)",
-          "rgba(75, 192, 192, 1)"
+          "rgba(75, 192, 192, 1)",
         ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const mealWorkoutChartData = {
+    labels: ["Weekly Plans"],
+    datasets: [
+      {
+        label: "Meal Plans",
+        data: [mealPlanCount],
+        backgroundColor: "rgba(153, 102, 255, 0.6)",
+        borderColor: "rgba(153, 102, 255, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: "Workout Plans",
+        data: [workoutPlanCount],
+        backgroundColor: "rgba(255, 159, 64, 0.6)",
+        borderColor: "rgba(255, 159, 64, 1)",
         borderWidth: 1,
       },
     ],
@@ -136,6 +181,16 @@ const Dashboard = () => {
       <div className="chart-section">
         <h3>Users by Location</h3>
         <Pie data={locationChartData} options={{ responsive: true }} />
+      </div>
+
+      {/* Meal and Workout Plan Chart */}
+      <div className="chart-section">
+        <h3>Meal & Workout Plan Statistics</h3>
+        {mealPlanCount !== null && workoutPlanCount !== null ? (
+          <Bar data={mealWorkoutChartData} options={{ responsive: true }} />
+        ) : (
+          <p>Loading meal and workout plan data...</p>
+        )}
       </div>
     </div>
   );
