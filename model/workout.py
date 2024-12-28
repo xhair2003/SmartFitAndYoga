@@ -47,7 +47,6 @@ def get_daily_workouts(predicted_duration, predicted_intensity, workout_data):
         ).argsort()[:1]]
 
         for _, workout in best_match.iterrows():
-            if workout["workout_title"] not in used_workouts:
                 used_workouts.add(workout["workout_title"])
                 daily_workout_plan.append({
                     "type": workout["type"],
