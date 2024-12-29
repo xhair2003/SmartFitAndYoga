@@ -114,8 +114,8 @@ const ToolForUser = () => {
     <div>
     <Navbar/>
     <div className="tools-page">
-      <header className="tools-header">
-        <h1>Fitness Tools</h1>
+      <header className="workout-header">
+        <h1>FITNESS TOOLS</h1>
         <p>Quick tools to guide you on your health and fitness journey!</p>
       </header>
 

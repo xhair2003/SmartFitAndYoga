@@ -3,6 +3,7 @@ import axios from 'axios';
 import './WorkoutPlan.css';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const WorkoutPlan = () => {
   const [workoutPlan, setWorkoutPlan] = useState(null); // Lưu kế hoạch tập luyện
@@ -10,17 +11,18 @@ const WorkoutPlan = () => {
   const [selectedExercise, setSelectedExercise] = useState(null); // Lưu bài tập được chọn
   const [loading, setLoading] = useState(true); // Trạng thái đang tải dữ liệu
   const [error, setError] = useState(null); // Lưu lỗi khi gọi API
+  const [authenticated, setAuthenticated] = useState(true); // Kiểm tra người dùng đã đăng nhập
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAuthenticated(false); // Nếu không có token, chuyển hướng
+      return;
+    }
+
     const fetchWorkoutPlan = async () => {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('Please login to use this function');
-        setLoading(false);
-        return;
-      }
-
       try {
         const response = await axios.get('http://localhost:5000/api/workout-plans/my', {
           headers: { Authorization: `Bearer ${token}` },
@@ -51,14 +53,30 @@ const WorkoutPlan = () => {
     setSelectedExercise(exercise);
   };
 
+  // Nếu chưa đăng nhập, hiển thị thông báo và chuyển hướng
+  if (!authenticated) {
+    return (
+      <div>
+        <Navbar />
+        <div className="auth-message-container">
+          <h2>You need to log in to access this page.</h2>
+          <button className="navigate-button" onClick={() => navigate('/login')}>
+            Go to Login
+          </button>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar />
-      
+
       <div className="workout-header">
         <h1>WORKOUT PLANS</h1>
       </div>
-      
+
       <div className="workout-plan-container">
         <div className="workout-wrapper">
           {loading ? (

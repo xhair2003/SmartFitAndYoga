@@ -20,9 +20,9 @@ const Footer = () => {
         </div>
         <div className="footer-section">
           <h3>Programs</h3>
-          <p className="footer-effect">Workout Plans</p>
-          <p className="footer-effect">Nutrition Plans</p>
-          <p className="footer-effect">Tracking</p>
+          <p className="footer-effect" onClick={() => navigate('/workout-plans')}>Workout Plans</p>
+          <p className="footer-effect" onClick={() => navigate('/meal-plans')}>Nutrition Plans</p>
+          <p className="footer-effect" onClick={() => navigate('/tracking')}>Tracking</p>
         </div>
         <div className="footer-section">
           <h3>Explore</h3>
@@ -31,9 +31,9 @@ const Footer = () => {
         </div>
         <div className="footer-section">
           <h3>About</h3>
-          <p className="footer-effect">Careers</p>
-          <p className="footer-effect">Tutorials</p>
-          <p className="footer-effect">Our Team</p>
+          <p className="footer-effect" onClick={() => navigate('/about')}>Careers</p>
+          <p className="footer-effect" onClick={() => navigate('/about')}>Tutorials</p>
+          <p className="footer-effect" onClick={() => navigate('/our-team')}>Our Team</p>
         </div>
         <div className="footer-section ">
           <div className="contact">

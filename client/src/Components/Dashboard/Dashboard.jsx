@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./Dashboard.css";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
-  PointElement,
-  LineElement,
   ArcElement,
   Title,
   Tooltip,
@@ -18,8 +17,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  PointElement,
-  LineElement,
   ArcElement,
   Title,
   Tooltip,
@@ -27,13 +24,75 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  // Dữ liệu giả
-  const visitsData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  const [dashboardData, setDashboardData] = useState(null);
+  const [mealPlanCount, setMealPlanCount] = useState(null);
+  const [workoutPlanCount, setWorkoutPlanCount] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        // Fetch Dashboard Stats
+        const dashboardResponse = await axios.get(
+          "http://localhost:5000/api/admin/users/getDashboardStats",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setDashboardData(dashboardResponse.data);
+
+        // Fetch Meal Plan Count
+        const mealPlanResponse = await axios.get(
+          "http://localhost:5000/api/meal-plans/count",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setMealPlanCount(mealPlanResponse.data.weeklyMealPlanCount);
+
+        // Fetch Workout Plan Count
+        const workoutPlanResponse = await axios.get(
+          "http://localhost:5000/api/workout-plans/count",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setWorkoutPlanCount(workoutPlanResponse.data.weeklyWorkoutPlanCount);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!dashboardData) {
+    return <p>Loading...</p>;
+  }
+
+  // Extracting data from API response
+  const { totalUsers, newUsers, activeUsers, rolesStats, locationStats } = dashboardData;
+
+  const rolesLabels = rolesStats.map((role) => role._id || "Unknown");
+  const rolesData = rolesStats.map((role) => role.count);
+
+  const locationLabels = locationStats.map((location) => location._id || "Unknown");
+  const locationData = locationStats.map((location) => location.count);
+
+  // Data for charts
+  const rolesChartData = {
+    labels: rolesLabels,
     datasets: [
       {
-        label: "Website Visits",
-        data: [1200, 1500, 800, 1700, 1900, 2200, 2000],
+        label: "Roles",
+        data: rolesData,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
@@ -41,12 +100,12 @@ const Dashboard = () => {
     ],
   };
 
-  const accountsData = {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+  const locationChartData = {
+    labels: locationLabels,
     datasets: [
       {
-        label: "Accounts Created",
-        data: [50, 80, 65, 90],
+        label: "Users by Location",
+        data: locationData,
         backgroundColor: "rgba(54, 162, 235, 0.6)",
         borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 1,
@@ -54,27 +113,42 @@ const Dashboard = () => {
     ],
   };
 
-  const revenueData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  const summaryChartData = {
+    labels: ["Total Users", "New Users", "Active Users"],
     datasets: [
       {
-        label: "Revenue (in $)",
-        data: [5000, 7000, 8000, 6000, 9000, 11000],
-        borderColor: "rgba(255, 99, 132, 1)",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        tension: 0.4,
+        label: "Summary",
+        data: [totalUsers, newUsers, activeUsers],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(75, 192, 192, 1)",
+        ],
+        borderWidth: 1,
       },
     ],
   };
 
-  const genderData = {
-    labels: ["Male", "Female"],
+  const mealWorkoutChartData = {
+    labels: ["Weekly Plans"],
     datasets: [
       {
-        label: "Gender Ratio",
-        data: [60, 40],
-        backgroundColor: ["rgba(54, 162, 235, 0.6)", "rgba(255, 99, 132, 0.6)"],
-        borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 99, 132, 1)"],
+        label: "Meal Plans",
+        data: [mealPlanCount],
+        backgroundColor: "rgba(153, 102, 255, 0.6)",
+        borderColor: "rgba(153, 102, 255, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: "Workout Plans",
+        data: [workoutPlanCount],
+        backgroundColor: "rgba(255, 159, 64, 0.6)",
+        borderColor: "rgba(255, 159, 64, 1)",
         borderWidth: 1,
       },
     ],
@@ -82,33 +156,41 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h2>Dashboard Overview</h2>
-      <p>Welcome to the admin dashboard. Here you can see key metrics and insights.</p>
+      <h2 className="dashboard_h2">Dashboard Overview</h2>
+      <p className="dashboard-p">Welcome to the admin dashboard. Here you can see key metrics and insights.</p>
 
-      {/* Biểu đồ truy cập trang web */}
-      <div className="chart-row">
-        <div className="chart-section">
-          <h3>Website Visits (Weekly)</h3>
-          <Bar data={visitsData} options={{ responsive: true }} />
-        </div>
-
-        {/* Biểu đồ tỷ lệ giới tính */}
-        <div className="chart-section">
-          <h3>Gender Ratio</h3>
-          <Pie data={genderData} options={{ responsive: true }} />
-        </div>
+      <div className="stats-summary">
+        <p className="dashboard-p">Total Users: {totalUsers}</p>
+        <p className="dashboard-p">New Users: {newUsers}</p>
+        <p className="dashboard-p">Active Users: {activeUsers}</p>
       </div>
 
-      {/* Biểu đồ tài khoản được tạo */}
+      {/* Summary Chart */}
       <div className="chart-section">
-        <h3>Accounts Created (Monthly)</h3>
-        <Bar data={accountsData} options={{ responsive: true }} />
+        <h3>User Summary</h3>
+        <Pie data={summaryChartData} options={{ responsive: true }} />
       </div>
 
-      {/* Biểu đồ doanh thu */}
+      {/* Roles Chart */}
       <div className="chart-section">
-        <h3>Revenue (Last 6 Months)</h3>
-        <Line data={revenueData} options={{ responsive: true }} />
+        <h3>User Roles</h3>
+        <Bar data={rolesChartData} options={{ responsive: true }} />
+      </div>
+
+      {/* Location Chart */}
+      <div className="chart-section">
+        <h3>Users by Location</h3>
+        <Pie data={locationChartData} options={{ responsive: true }} />
+      </div>
+
+      {/* Meal and Workout Plan Chart */}
+      <div className="chart-section">
+        <h3>Meal & Workout Plan Statistics</h3>
+        {mealPlanCount !== null && workoutPlanCount !== null ? (
+          <Bar data={mealWorkoutChartData} options={{ responsive: true }} />
+        ) : (
+          <p className="dashboard-p">Loading meal and workout plan data...</p>
+        )}
       </div>
     </div>
   );

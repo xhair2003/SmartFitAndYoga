@@ -3,6 +3,7 @@ const {
   createWeeklyWorkoutPlan,
   getMyWeeklyWorkoutPlan,
   aIPredict,
+  countWorkoutPlans,
 } = require('../controllers/workoutPlanController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
@@ -18,5 +19,8 @@ router.get('/my', authMiddleware, getMyWeeklyWorkoutPlan);
 
 // Lấy Weekly Meal Plan của cá nhân
 router.post('/generate-weekly-workout-plan', authMiddleware, aIPredict);
+
+router.get('/count', authMiddleware, countWorkoutPlans);
+
 
 module.exports = router;

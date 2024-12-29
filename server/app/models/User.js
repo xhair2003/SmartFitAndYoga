@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['Admin', 'User'], default: 'User' },
   resetPasswordToken: { type: String },
   resetPasswordExpiresAt: { type: Date },
+}, {
+  timestamps: true
 });
 
 // Hash password trước khi lưu

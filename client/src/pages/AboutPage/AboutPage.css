@@ -21,11 +21,28 @@
   transition: background-color 0.3s ease;
   font-family: 'Roboto', sans-serif;
 }
+.ourteam-header {
+  text-align: center;
+  margin-bottom: 50px;
+  position: relative; 
+  z-index: 1; 
+  background-image: url('../../../public/bg.png');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
+  background-color: rgba(0, 0, 0, 0.472);
+  color: #fff;
+  padding: 50px 20px;
+  transition: background-color 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+}
 
 .about-us-header:hover {
   background-color: rgba(255, 255, 255, 0); 
 }
-
+.ourteam-header:hover {
+  background-color: rgba(255, 255, 255, 0); 
+}
 .about-us-container::before {
   content: '';
   position: absolute;
@@ -41,8 +58,18 @@
   font-size: 3em;
   margin-bottom: 10px;
 }
+.ourteam-header h2 {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
 
 .about-us-header p {
+  font-size: 1em;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ourteam-header p {
   font-size: 1em;
   max-width: 800px;
   margin: 0 auto;
@@ -75,6 +102,12 @@
 .about-image img {
   border-radius: 60%;
   width: 100%;
+  height: auto;
+  transition: transform 0.3s ease; 
+}
+.ourteam-image img {
+  border-radius: 50%;
+  max-width: 600px;
   height: auto;
   transition: transform 0.3s ease; 
 }

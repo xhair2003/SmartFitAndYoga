@@ -4,35 +4,37 @@ import * as S from './MealPlanStyles';
 import './MealPlan.css';
 import Footer from '../../Components/Footer/Footer';
 import Navbar from '../../Components/Navbar/Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const MealPlanPage = () => {
-  const [activeDay, setActiveDay] = useState(0); // Ngày hiện tại được chọn
-  const [hoveredDay, setHoveredDay] = useState(null); // Ngày đang hover
-  const [mealPlan, setMealPlan] = useState(null); // Dữ liệu từ API
-  const [loading, setLoading] = useState(true); // Trạng thái loading
-  const [error, setError] = useState(null); // Trạng thái lỗi
+  const [activeDay, setActiveDay] = useState(0);
+  const [hoveredDay, setHoveredDay] = useState(null);
+  const [mealPlan, setMealPlan] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [authenticated, setAuthenticated] = useState(true);
+  const navigate = useNavigate();
 
   const dayListRef = useRef(null);
 
-  // Hàm fetch dữ liệu từ API
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAuthenticated(false);
+      return;
+    }
+
     const fetchMealPlan = async () => {
       try {
         setLoading(true);
 
-        // Lấy token từ localStorage
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Please login to use this function');
-        }
-
         const response = await axios.get('http://localhost:5000/api/meal-plans/my', {
           headers: {
-            Authorization: `Bearer ${token}`, // Sử dụng token từ localStorage
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        setMealPlan(response.data.weeklyMealPlan); // Lưu dữ liệu kế hoạch ăn uống
+        setMealPlan(response.data.weeklyMealPlan);
       } catch (err) {
         setError(err.response ? err.response.data.message : err.message);
       } finally {
@@ -43,11 +45,20 @@ const MealPlanPage = () => {
     fetchMealPlan();
   }, []);
 
-  // Log kiểm tra dữ liệu
-  useEffect(() => {
-    console.log('Current MealPlan:', mealPlan);
-    console.log('Active Day:', activeDay);
-  }, [mealPlan, activeDay]);
+  if (!authenticated) {
+    return (
+      <div>
+        <Navbar />
+        <div className="auth-message-container">
+          <h2>You need to log in to access this page.</h2>
+          <button className="navigate-button" onClick={() => navigate('/login')}>
+            Go to Login
+          </button>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -57,9 +68,9 @@ const MealPlanPage = () => {
       </div>
       <S.PageContainer>
         {loading ? (
-          <p>Loading...</p> // Hiển thị trạng thái loading
+          <p>Loading...</p>
         ) : error ? (
-          <p style={{ color: 'red' }}>{error}</p> // Hiển thị lỗi
+          <p style={{ color: 'red' }}>{error}</p>
         ) : (
           <S.ContentContainer>
             <S.Sidebar>
@@ -94,10 +105,7 @@ const MealPlanPage = () => {
                       key={index}
                       active={index === activeDay}
                       hovered={index === hoveredDay}
-                      onClick={() => {
-                        console.log(`Clicked day index: ${index}`); // Kiểm tra sự kiện click
-                        setActiveDay(index);
-                      }}
+                      onClick={() => setActiveDay(index)}
                       onMouseEnter={() => setHoveredDay(index)}
                       onMouseLeave={() => setHoveredDay(null)}
                     >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./GeneratorPlans.css";
@@ -16,8 +16,17 @@ const GeneratorPlansPage = () => {
 
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false); // State for success dialog
+    const [success, setSuccess] = useState(false);
+    const [authenticated, setAuthenticated] = useState(true); // State để kiểm tra xác thực
     const navigate = useNavigate();
+
+    // Kiểm tra token để xác thực
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setAuthenticated(false); // Người dùng chưa đăng nhập
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -45,7 +54,7 @@ const GeneratorPlansPage = () => {
 
             const workoutPlanPayload = {
                 age: parseInt(formData.age, 10),
-                gender: parseInt(formData.gender, 10), // Convert gender to integer
+                gender: parseInt(formData.gender, 10),
                 weight: parseFloat(formData.weight),
                 height: parseFloat(formData.height),
                 goal: formData.goal,
@@ -70,7 +79,7 @@ const GeneratorPlansPage = () => {
                 ),
             ]);
 
-            setSuccess(true); // Set success state
+            setSuccess(true);
         } catch (err) {
             const errorMessage = err.response
                 ? err.response.data.error || JSON.stringify(err.response.data)
@@ -80,6 +89,22 @@ const GeneratorPlansPage = () => {
             setLoading(false);
         }
     };
+
+    // Nếu chưa đăng nhập, hiển thị thông báo và chuyển hướng
+    if (!authenticated) {
+        return (
+            <div>
+                <Navbar />
+                <div className="auth-message-container">
+                    <h2>You need to log in to access this page.</h2>
+                    <button className="navigate-button" onClick={() => navigate("/login")}>
+                        Go to Login
+                    </button>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div>

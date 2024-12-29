@@ -114,3 +114,30 @@
 .navigate-button:hover {
     background: #0056b3;
 }
+.auth-message-container {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.auth-message-container h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.navigate-button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-image: linear-gradient(to right, #35647d, #0c2234); /* Gradient màu xanh dương */
+  color: white;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 300ms ease, transform 300ms ease, box-shadow 300ms ease;
+}
+
+.navigate-button:hover {
+  background-color: #0056b3;
+}

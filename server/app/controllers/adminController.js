@@ -136,4 +136,42 @@ const addUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, deleteUser, updateUser, addUser };
+const getDashboardStats = async (req, res) => {
+  try {
+    // Tổng số người dùng
+    const totalUsers = await User.countDocuments();
+
+    // Số người dùng mới trong 30 ngày qua
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+    const newUsers = await User.countDocuments({ createdAt: { $gte: oneMonthAgo } });
+
+    // Phân loại người dùng theo vai trò
+    const rolesStats = await User.aggregate([
+      { $group: { _id: '$role', count: { $sum: 1 } } }
+    ]);
+
+    // Số người dùng đang hoạt động
+    const activeUsers = await User.countDocuments({ isActive: true });
+
+    // Thống kê người dùng theo quốc gia
+    const locationStats = await User.aggregate([
+      { $group: { _id: '$location', count: { $sum: 1 } } }
+    ]);
+
+    // Trả về dữ liệu
+    res.json({
+      totalUsers,
+      newUsers,
+      rolesStats,
+      activeUsers,
+      locationStats,
+    });
+  } catch (error) {
+    console.error('Lỗi khi lấy thống kê dashboard:', error.message);
+    res.status(500).json({ error: 'Không thể lấy thống kê dashboard.' });
+  }
+};
+
+
+module.exports = { getAllUsers, deleteUser, updateUser, addUser, getDashboardStats };

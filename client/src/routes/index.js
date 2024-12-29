@@ -15,6 +15,7 @@ import ProgressTracking from "../pages/ProgressTrackingPage/ProgressTracking.jsx
 import Blog from "../pages/Blog/Blog.jsx";
 import ToolForUser from "../pages/ToolForUser/ToolForUser.jsx";
 import GeneratorPlansPage from "../pages/GeneratorPlans/GeneratorPlans.jsx";
+import OurTeam from "../pages/AboutPage/OutTeam.jsx";
 
 export const routes = [
     {   
@@ -106,6 +107,12 @@ export const routes = [
     },
     {   
         id: 17,
+        path: '/our-team',
+        page: OurTeam,
+    },
+
+    {   
+        id: 18,
         path: '*',
         page: ErrorPage,
     },

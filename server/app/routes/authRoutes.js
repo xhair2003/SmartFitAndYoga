@@ -2,11 +2,12 @@ const express = require('express');
 const {
   register,
   login,
-  //profileUser,
+  profileUser,
   requestPasswordReset,
 } = require('../controllers/authController');
 const { reset } = require('nodemon');
 const { limiter, limiterAuth } = require('../services/rateLimit');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 
 const router = express.Router();
@@ -15,7 +16,7 @@ router.post('/register',limiterAuth , register);
 
 router.post('/login',limiterAuth , login);
 
-//router.get('/me', profileUser);
+router.get('/me',authMiddleware, profileUser);
 
 router.post('/request-reset', requestPasswordReset);
 
